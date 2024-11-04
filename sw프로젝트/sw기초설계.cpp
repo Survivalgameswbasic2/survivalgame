@@ -12,9 +12,11 @@
 #define STAGE_WIDTH 34  // 스테이지의 너비
 #define STAGE_HEIGHT 20 // 스테이지의 높이 
 #define MAX_HEALTH 5    // 최대 체력
+#define stat_Height 12 //스탯창이 끝나는 지점의 높이 
 int TIMEWIDTH = 27;// 6칸차지
 int TIMEHEIGHT = 5;
-
+void setCursorPosition2(int x, int y); //커서 위치 지정
+void CommunicationBoxNPC(int flag); //NPC 소통 박스
 
 // 콘솔 커서 위치 설정
 void setCursorPosition(int x, int y) {
@@ -308,6 +310,41 @@ int NpcAnswer() {
 		return 0;
 	}
 }
+//npc대화창 출력 함수 
+
+void setCursorPosition2(int x, int y) {
+	COORD pos = { x,y };
+	HANDLE hConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleCursorPosition(hConsoleOut, pos);
+	CONSOLE_CURSOR_INFO curCursorInfo;
+	GetConsoleCursorInfo(hConsoleOut, &curCursorInfo);
+	curCursorInfo.bVisible = 0;
+	SetConsoleCursorInfo(hConsoleOut, &curCursorInfo);
+}
+
+void CommunicationBoxNPC(int flag) {
+	//npc 만난 상태가 아니면 박스 삭제
+	if (flag == 0) {
+		setCursorPosition2(STAGE_WIDTH*2 + 4, stat_Height + 1);
+		printf("                                        ");
+		for (int i = 0; i < 7; i++) {
+			setCursorPosition2(STAGE_WIDTH*2 + 4, stat_Height + 2 + i);
+			printf("                                     ");
+		}
+		setCursorPosition2(STAGE_WIDTH*2 + 4, stat_Height + 8);
+		printf("                                             ");
+		return;
+	}
+	//npc 만난 상태이면 박스 생성
+	setCursorPosition2(STAGE_WIDTH*2 + 4, stat_Height + 1);
+	printf("┌─────────────────────────┐");
+	for (int i = 0; i < 7; i++) {
+		setCursorPosition2(STAGE_WIDTH*2 + 4, stat_Height + 2 + i);
+		printf("│                         │");
+	}
+	setCursorPosition2(STAGE_WIDTH*2 + 4, stat_Height + 8);
+	printf("└─────────────────────────┘");
+}
 
 int main() {
 	int playerX = 1; // 주인공 초기 X 좌표
@@ -318,6 +355,7 @@ int main() {
 	
 
 	system("cls"); // 콘솔초기화
+	CommunicationBoxNPC(1);
 	createTimeTable();
 	std::thread timerThread(timer, realTimeLimit);
 	// timerunning을 false로 바꾸면 타이머 종료
