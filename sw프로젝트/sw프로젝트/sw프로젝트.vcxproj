@@ -123,27 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="day0.cpp" />
-    <ClCompile Include="NPC대화창.cpp" />
-    <ClCompile Include="게임시작화면.cpp" />
-    <ClCompile Include="게임창.cpp" />
-    <ClCompile Include="대화창.cpp" />
-    <ClCompile Include="도구.cpp" />
-    <ClCompile Include="메인파일.cpp" />
-    <ClCompile Include="상태창.cpp" />
-    <ClCompile Include="타이머.cpp" />
-    <ClCompile Include="플레이어.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="day0.h" />
-    <ClInclude Include="NPC대화창.h" />
-    <ClInclude Include="게임시작화면.h" />
-    <ClInclude Include="게임창.h" />
-    <ClInclude Include="대화창.h" />
-    <ClInclude Include="도구.h" />
-    <ClInclude Include="상태창.h" />
-    <ClInclude Include="타이머.h" />
-    <ClInclude Include="플레이어.h" />
+    <ClCompile Include="sw기초설계.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

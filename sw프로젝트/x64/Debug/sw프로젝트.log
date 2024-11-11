@@ -1,0 +1,13 @@
+﻿  day0.cpp
+  NPC대화창.cpp
+  게임시작화면.cpp
+  게임창.cpp
+  대화창.cpp
+  도구.cpp
+  메인파일.cpp
+  상태창.cpp
+  타이머.cpp
+c:\users\jamie\desktop\sw_develop\sw프로젝트\타이머.cpp(1): warning C4067: 전처리기 지시문 다음에 예기치 않은 토큰이 있습니다. 줄 바꿈 문자가 필요합니다.
+  플레이어.cpp
+  코드를 생성하고 있습니다...
+  sw프로젝트.vcxproj -> C:\Users\jamie\Desktop\SW_DEVELOP\sw프로젝트\x64\Debug\sw프로젝트.exe
