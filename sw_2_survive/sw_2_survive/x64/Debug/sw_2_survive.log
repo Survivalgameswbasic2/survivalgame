@@ -1,0 +1,3 @@
+﻿  map_image.cpp
+C:\Users\jamie\Desktop\survivalgame-main\survivalgame-main\sw_2_survive\map_image.cpp(92,1): error C2059: 구문 오류: '}'
+C:\Users\jamie\Desktop\survivalgame-main\survivalgame-main\sw_2_survive\map_image.cpp(92,1): error C2143: 구문 오류: ';'이(가) '}' 앞에 없습니다.
