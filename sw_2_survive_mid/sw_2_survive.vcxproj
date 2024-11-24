@@ -146,6 +146,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="ready_screen.cpp" />
     <ClCompile Include="ready_screen_after.cpp" />
+    <ClCompile Include="Zombies.cpp" />
     <ClCompile Include="zombie_move.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +168,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="ready_screen.h" />
     <ClInclude Include="ready_screen_after.h" />
+    <ClInclude Include="Zombies.h" />
     <ClInclude Include="zombie_move.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

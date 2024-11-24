@@ -52,5 +52,5 @@ int main() {
 	start_day4(user);
 	system("cls");
 	draw_ready_after(user, 4);
-	//start_day7(user);
+	start_day7(user);
 }

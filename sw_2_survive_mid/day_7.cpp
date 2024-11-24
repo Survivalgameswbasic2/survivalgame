@@ -1,4 +1,4 @@
-/*#include "expire_tool.h"
+#include "expire_tool.h"
 #include "player.h"
 #include <string>
 #include <conio.h>
@@ -7,7 +7,7 @@
 #include "bad_ending.h"
 #include "game_map.h"
 #include <vector>
-#include "zombie_move.h"
+#include "Zombies.h"
 #include <mutex>
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
@@ -16,7 +16,7 @@ std::string dialogue_7[] = {
     "구조대"
 };
 
-std::vector<Zombie*> zombies;
+std::vector<Zombies*> zombies;
 std::mutex zombieMutex;
 int bullet_num = 3;
 int playerDirection = 3; // 0: 위, 1: 아래, 2: 왼쪽, 3: 오른쪽 (초기 값은 오른쪽)
@@ -36,7 +36,7 @@ void spawn_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user, int spawn_
         std::this_thread::sleep_for(std::chrono::seconds(5)); // 3초 대기
 
         std::lock_guard<std::mutex> lock(zombieMutex); // 뮤텍스 잠금
-        Zombie* newZombie = new Zombie(spawn_x, spawn_y, 1, 0);
+        Zombies* newZombie = new Zombies(spawn_x, spawn_y, 1, 0);
         zombies.push_back(newZombie);
         map[spawn_y][spawn_x] = 'x'; // 맵에 좀비 표시
     }
@@ -48,7 +48,7 @@ void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
 
         std::lock_guard<std::mutex> lock(zombieMutex); // 뮤텍스 잠금
         for (auto it = zombies.begin(); it != zombies.end();) {
-            Zombie* z = *it;
+            Zombies* z = *it;
 
             // 현재 좀비 위치를 지움
             map[z->y][z->x] = ' ';
@@ -102,7 +102,7 @@ void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
             {
                 std::lock_guard<std::mutex> zombieLock(zombieMutex);
                 for (auto zIt = zombies.begin(); zIt != zombies.end();) {
-                    Zombie* z = *zIt;
+                    Zombies* z = *zIt;
                     if (std::abs(z->x - b.x) <= 0 && std::abs(z->y - b.y) <= 0) {
                         map[z->y][z->x] = ' ';
                         delete z;
@@ -265,4 +265,3 @@ void start_day7(player* user) {
         draw_map(map);
     }
 }
-*/

@@ -141,7 +141,7 @@ void printstat(player* user) {
 	SetConsoleCursorPosition(hConsoleOut, pos1);
 
 	std::cout << "│ 스트레스 : ";
-	std::cout << user->mental;
+	std::cout << user->mental << " ";
 	pos1.X = pos1.X+ 26;
 	SetConsoleCursorPosition(hConsoleOut, pos1);
 	std::cout << "│";
