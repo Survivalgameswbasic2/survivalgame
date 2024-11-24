@@ -10,6 +10,63 @@ using namespace std;
 #define STAGE_WIDTH 70  // 스테이지의 너비
 #define STAGE_HEIGHT 20 // 스테이지의 높이 
 
+
+void print_intro(int day) {
+
+	if (day == 0) {
+		setCursorPosition(1, 1);
+		printf("눈을 떴을 때는 동굴이었다.");
+		setCursorPosition(1, 2);
+		printf("앞이 보이지 않는 어둠 속에서 희미하게 어떤 소리가 들려온다.");
+		setCursorPosition(1, 3);
+		printf("우선 내가 어떤 상황에 있는지 알아내자. ");
+		setCursorPosition(1, 5);
+		printf("목표: 동굴 내부를 탐사하자");
+		setCursorPosition(1, 7);
+		printf("이동키: a w s d 키");
+		setCursorPosition(1, 8);
+		printf("상호작용키: 스페이스키");
+	}
+	else if (day == 1) {
+		setCursorPosition(1, 1);
+		printf("동굴 안의 사람에게 들은 바로는, 좀비와 햇빛을 피하라고 했었지. ");
+		setCursorPosition(1, 2);
+		printf("일단은 동굴 바깥쪽의 외딴 집이 있어서, 그 곳으로 가서 ");
+		setCursorPosition(1, 3);
+		printf("먹을 것이나 도움이 될만한 물건이 있는지 살펴봐야겠다.");
+		setCursorPosition(1, 4);
+		printf("동쪽에서부터 비춰오는 햇빛을 조심하며 이동하자.");
+		setCursorPosition(1, 6);
+		printf("목표: 외딴 집을 탐사하자");
+
+	}
+	else if (day == 2) {
+		setCursorPosition(1, 1);
+		printf("사람들의 흔적이 많을 캠핑장에 도착했다.");
+		setCursorPosition(1, 2);
+		printf("아직 좀비가 된지 얼마 안되서인지 주변을 움직이며 배회하니 조심하도록 하자.");
+		setCursorPosition(1, 3);
+		printf("살아남은 사람들의 흔적을 조사해서 행방을 알아낼 수 있지않을까?");
+		setCursorPosition(1, 4);
+		printf("연구원이 말했던 무전기 부품도 찾아보도록 하자.");
+		setCursorPosition(1, 6);
+		printf("목표:캠핑장에서 사람들의 흔적을 조사하고 무전기부품을 회수하자");
+	}
+	else if (day == 3) {
+
+	}
+
+
+	int key = _getch();
+	while (_kbhit() == 0) {
+	}
+
+
+
+	system("cls");
+
+}
+
 void draw_ready_text(player* p, int day) {
 
 	int xOffset = 0;
@@ -259,6 +316,8 @@ void printInformation2(player* p) {
 
 // 텍스트 창 초기화 및 메시지 출력 함수
 void draw_ready(player* p, int day) {
+	print_intro(day);
+
 	int xOffset = 0;
 	int yOffset = STAGE_HEIGHT + 1; // 맵 창 하단에 텍스트 창 위치 설정  
 	int width = STAGE_WIDTH;    // 텍스트 창 가로 길이

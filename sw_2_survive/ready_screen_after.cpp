@@ -48,9 +48,10 @@ void draw_ready_text_after(player* p) {
 
 	key = 0;
 
-	if (p->food >= 0) {
+	if (p->food > 0) {
 		p->food--;
 		p->mental = p->mental - 20;
+
 		if (p->mental <= 0) {
 			p->mental = 0;
 		}
@@ -62,7 +63,7 @@ void draw_ready_text_after(player* p) {
 			p->mental = 100;
 		}
 	}
-	if (p->water >= 0) {
+	if (p->water > 0) {
 		p->water--;
 	}
 	else {
@@ -167,7 +168,24 @@ void draw_ready_map_after(int day) {
 
 		if (day >= 1) {
 
+			for (int i = 0; i < 6; i++) {
+				setCursorPosition(xOffset + 4, yOffset + 11 + i);
+				for (int j = 0; j < 16; j++) {
+					printf("%c", mapList[1][i][j]);
+				}
+			}
+
+			if (day >= 2) {
+
+				for (int i = 0; i < 6; i++) {
+					setCursorPosition(xOffset + 1, yOffset + 4 + i);
+					for (int j = 0; j < 16; j++) {
+						printf("%c", mapList[2][i][j]);
+					}
+				}
+			}
 		}
+
 	}
 
 
@@ -177,7 +195,7 @@ void draw_ready_map_after(int day) {
 
 
 void printInformation_after(player* p) {
-	system("cls");
+
 	int food = p->food;
 	for (int i = 0; i < 4; i++) {
 		setCursorPosition(6, i + 1);
@@ -245,19 +263,19 @@ void printInformation2_after(player* p) {
 	setCursorPosition(38, 5);
 	printf("현재 스트레스 수치 x %d", mp);
 
-
 	setCursorPosition(42, 8);
-	printf("	┌──┐");
+	printf(" ┌──┐");
 	setCursorPosition(42, 9);
-	printf("	│    │");
+	printf(" │  │");
 	setCursorPosition(42, 10);
-	printf("	└──┘");
+	printf(" └──┘");
 	setCursorPosition(42, 11);
-	printf("┌──────┐");
+	printf("┌────┐");
 	setCursorPosition(42, 12);
-	printf("│          ♥ │");
+	printf("│  ♥ │");
 	setCursorPosition(42, 13);
-	printf("│            │");
+	printf("│    │");
+
 
 
 }

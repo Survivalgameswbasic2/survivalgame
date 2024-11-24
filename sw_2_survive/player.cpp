@@ -14,6 +14,6 @@ player::player() {
 	player_x = 1;
 	player_y = 0;
 	direction = 0;
-	gun = 1;
+	gun = 0;
 	radio = 0;
 }

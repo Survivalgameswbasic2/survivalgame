@@ -1,4 +1,4 @@
-#include "expire_tool.h"
+/*#include "expire_tool.h"
 #include "player.h"
 #include <string>
 #include <conio.h>
@@ -8,7 +8,7 @@
 #include "game_map.h"
 #include <vector>
 #include "zombie_move.h"
-#include<mutex>
+#include <mutex>
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 
@@ -16,19 +16,29 @@ std::string dialogue_7[] = {
     "구조대"
 };
 
-std::vector<Zombie*>zombies;
+std::vector<Zombie*> zombies;
 std::mutex zombieMutex;
-
+int bullet_num = 3;
 int playerDirection = 3; // 0: 위, 1: 아래, 2: 왼쪽, 3: 오른쪽 (초기 값은 오른쪽)
 
-void spawn_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user,int spawn_x, int spawn_y) {
+struct Bullet {
+    int x;
+    int y;
+    int direction;
+    int distanceTraveled;
+};
+
+std::vector<Bullet> bullets;
+std::mutex bulletMutex;
+
+void spawn_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user, int spawn_x, int spawn_y) {
     while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(3)); // 3초 대기
+        std::this_thread::sleep_for(std::chrono::seconds(5)); // 3초 대기
 
         std::lock_guard<std::mutex> lock(zombieMutex); // 뮤텍스 잠금
         Zombie* newZombie = new Zombie(spawn_x, spawn_y, 1, 0);
         zombies.push_back(newZombie);
-        map[4][4] = 'x'; // 맵에 좀비 표시
+        map[spawn_y][spawn_x] = 'x'; // 맵에 좀비 표시
     }
 }
 
@@ -44,10 +54,10 @@ void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
             map[z->y][z->x] = ' ';
 
             // 플레이어를 향한 이동 계산
-            if (z->x < user->player_x) z->x++;
-            else if (z->x > user->player_x) z->x--;
-            if (z->y < user->player_y) z->y++;
-            else if (z->y > user->player_y) z->y--;
+            if (z->x < user->player_x && map[z->y][z->x + 1] !='*') z->x++;
+            else if (z->x > user->player_x && map[z->y][z->x -1] != '*') z->x--;
+            if (z->y < user->player_y && map[z->y+1][z->x] != '*') z->y++;
+            else if (z->y > user->player_y && map[z->y-1][z->x] != '*') z->y--;
 
             // 충돌 체크
             if (z->x == user->player_x && z->y == user->player_y) {
@@ -65,6 +75,62 @@ void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
         }
     }
 }
+
+void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200)); // 0.1초 대기
+        std::lock_guard<std::mutex> lock(bulletMutex);
+
+        for (auto it = bullets.begin(); it != bullets.end();) {
+            Bullet& b = *it;
+
+            // 현재 총알 위치 지움
+            map[b.y][b.x] = ' ';
+
+            // 방향에 따라 이동
+            switch (b.direction) {
+            case 0: b.y--; break;
+            case 1: b.y++; break;
+            case 2: b.x--; break;
+            case 3: b.x++; break;
+            }
+
+            b.distanceTraveled++;
+
+            // 충돌 감지
+            bool hit = false;
+            {
+                std::lock_guard<std::mutex> zombieLock(zombieMutex);
+                for (auto zIt = zombies.begin(); zIt != zombies.end();) {
+                    Zombie* z = *zIt;
+                    if (std::abs(z->x - b.x) <= 0 && std::abs(z->y - b.y) <= 0) {
+                        map[z->y][z->x] = ' ';
+                        delete z;
+                        zIt = zombies.erase(zIt);
+                        hit = true;
+                        break;
+                    }
+                    else {
+                        ++zIt;
+                    }
+                }
+            }
+
+            // 충돌 또는 경계 초과 처리
+            if (hit || b.x < 0 || b.x >= MAP_WIDTH || b.y < 0 || b.y >= MAP_HEIGHT || b.distanceTraveled > 7) {
+                it = bullets.erase(it);
+                bullet_num++;
+                draw_map(map);
+                continue;
+            }
+
+            // 맵에 총알 위치 표시
+            map[b.y][b.x] = '*';
+            ++it;
+        }
+    }
+}
+
 
 void start_day7(player* user) {
     system("cls");
@@ -84,10 +150,14 @@ void start_day7(player* user) {
     bool in_dialogue = false;
     int flag = 0;
     int dialogue_num = 0;
-    std::thread zombieSpawnThread(spawn_zombies, map, user,4,4);
-    std::thread zombieSpawnThread2(spawn_zombies, map, user, 4, 6);
+    std::thread zombieSpawnThread(spawn_zombies, map, user, 2, 4);
+    std::thread zombieSpawnThread2(spawn_zombies, map, user, 2, 17);
+    std::thread zombieSpawnThread3(spawn_zombies, map, user, 31, 4);
+    std::thread zombieSpawnThread4(spawn_zombies, map, user, 31, 17);
 
     std::thread zombieMoveThread(move_zombies, map, user);
+    std::thread bulletMoveThread(move_bullets, map);
+
     map[user->player_y][user->player_x] = 'P';
     while (true) {
         map[user->player_y][user->player_x] = ' ';
@@ -96,7 +166,8 @@ void start_day7(player* user) {
             if (timerThread.joinable()) { timerThread.join(); }
             if (zombieSpawnThread.joinable()) zombieSpawnThread.join();
             if (zombieMoveThread.joinable()) zombieMoveThread.join();
-         break;
+            if (bulletMoveThread.joinable()) bulletMoveThread.join();
+            break;
         }
         if (in_dialogue) {
             // 대화 중일 때
@@ -160,6 +231,11 @@ void start_day7(player* user) {
                     updateTextBox("좀비에게 데미지를 입었다.");
                 }
             }
+            else if (key == 's' && bullet_num>0) { // 's' 키로 총알 발사
+                std::lock_guard<std::mutex> lock(bulletMutex);
+                bullet_num--;
+                bullets.push_back({ user->player_x, user->player_y, playerDirection, 0 });
+            }
             else if (key == ' ' && is_player_near_item(user, map)) { // 엔터키로 아이템 획득
                 map[user->player_y][user->player_x] = ' ';
             }
@@ -175,15 +251,18 @@ void start_day7(player* user) {
             if (timerThread.joinable()) { timerThread.join(); }
             if (zombieSpawnThread.joinable()) zombieSpawnThread.join();
             if (zombieMoveThread.joinable()) zombieMoveThread.join();
+            if (bulletMoveThread.joinable()) bulletMoveThread.join();
             bad_ending();
         }
         if (user->mental <= 0) {
             if (timerThread.joinable()) { timerThread.join(); }
             if (zombieSpawnThread.joinable()) zombieSpawnThread.join();
             if (zombieMoveThread.joinable()) zombieMoveThread.join();
+            if (bulletMoveThread.joinable()) bulletMoveThread.join();
             bad_ending();
         }
         map[user->player_y][user->player_x] = 'P';
         draw_map(map);
     }
 }
+*/

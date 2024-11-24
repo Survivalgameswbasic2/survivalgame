@@ -8,5 +8,6 @@ void printInformation(player* p);
 void printInformation2(player* p);
 void draw_ready_text(player* p, int day);
 void test_print(int x, int y);
+void print_intro(int day);
 
 #endif

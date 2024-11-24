@@ -7,6 +7,9 @@
 #include "bad_ending.h"
 #include "game_map.h"
 #include <vector>
+#include<chrono>
+#include"zombie_move.h"
+#include <atomic>
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 
@@ -73,7 +76,18 @@ std::vector<std::vector<std::string>> dialogue_3 = {
 	"플레이어: 네 그럼 이만 떠나겠습니다."
 }
 };
+std::atomic<bool> terminateZombieThread3(false);
+void zombieMoveThread3(std::vector<Zombie>& zombies, char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
+	while (!terminateZombieThread3) {
+		// 1초마다 좀비를 이동
+		std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 1초 대기
 
+		// 좀비 이동	
+		for (auto& zombie : zombies) {
+			zombie.move(map, user);
+		}
+	}
+}
 void start_day3(player* user) {
 	system("cls");
 	char map[MAP_HEIGHT][MAP_WIDTH + 1];
@@ -81,6 +95,25 @@ void start_day3(player* user) {
 	draw_map(map);         // 탐험 맵
 	printstat(user); // 아이템 창 
 	updateTextBox("");
+
+	//좀비 생성
+	std::vector<Zombie> zombies = {
+		Zombie(7, 18,0,1,3),
+		Zombie(5, 8,1,0,3),
+		Zombie(2, 11,1,0,3),
+		Zombie(27, 2,1,0,3),
+		Zombie(14, 5,1,0,3),
+		Zombie(20, 5,1,0,3),
+		Zombie(16, 3,1,0,3),
+		Zombie(6, 15,1,0,3),
+		Zombie(15, 8,0,1,3),
+		Zombie(21, 8,1,0,3),
+		Zombie(15, 11,1,0,3),
+		Zombie(21, 11,0,1,3),
+		Zombie(18, 9,1,0,3),
+		Zombie(18, 12,1,0,3)
+	};
+	std::thread zombieThread3(zombieMoveThread3, std::ref(zombies), map, user);
 
 	user->player_x = 5;
 	user->player_y = 6;
@@ -97,6 +130,10 @@ void start_day3(player* user) {
 		map[user->player_y][user->player_x] = ' ';
 		draw_sunlight(map);
 		if (get_hour() == 21) {
+			terminateZombieThread3 = true;
+			if (zombieThread3.joinable()) {
+				zombieThread3.join();
+			}
 			if (timerThread.joinable()) {
 				timerThread.join();
 			}
@@ -107,7 +144,7 @@ void start_day3(player* user) {
 			if (_kbhit()) {
 				int key = _getch();
 				if (key == ' ') { // 스페이스바로 대화 진행
-					if (dialogue_line < sizeof(dialogue_3) / sizeof(dialogue_3[0])) {
+					if (dialogue_line < dialogue_3[dialogue_num].size()) {
 						updateDialogue(dialogue_3[dialogue_num][dialogue_line++]);
 					}
 					else {
@@ -115,18 +152,19 @@ void start_day3(player* user) {
 						dialogue_clear();
 						in_dialogue = false;
 						set_isExplore(true);
+						dialogue_line = 0;
+						dialogue_num++;
+						if (dialogue_num == 1) {
+							map[1][11] = ' ';
+							map[10][32] = 'N';
+						}
+						else if (dialogue_num == 2) {
+							map[10][32] = ' ';
+						}
+						else if(dialogue_num==3){
+							dialogue_num = 2;
+						}
 					}
-				}
-				if (dialogue_num == 0) {
-					map[1][11] = ' ';
-					map[5][11] = 'N';
-					dialogue_line = 0;
-					dialogue_num++;
-				}
-				else if (dialogue_num == 1) {
-					map[5][11] = ' ';
-					dialogue_line = 0;
-					dialogue_num++;
 				}
 			}
 			continue; // 대화 중에는 아래 로직을 무시하고 다음 루프로 이동
@@ -145,6 +183,10 @@ void start_day3(player* user) {
 				}
 				if (map[newY][newX] == '?') {
 					stop_timer_running();
+					terminateZombieThread3 = true;
+					if (zombieThread3.joinable()) {
+						zombieThread3.join();
+					}
 					if (timerThread.joinable()) {
 						timerThread.join();
 					}
@@ -161,7 +203,7 @@ void start_day3(player* user) {
 					user->player_x = newX;
 					user->player_y = newY;
 					user->mental--;
-					updateTextBox("햇빛에 스트레스를 받았다");
+					updateTextBox("햇빛에 데미지를 받았다");
 				}
 				else if (is_zombie_position(newX, newY, map)) {
 					user->heart--;

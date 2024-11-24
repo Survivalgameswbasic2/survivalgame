@@ -8,6 +8,7 @@
 #include "day_1.h"
 #include "day_2.h"
 #include "day_3.h"
+#include "day_4.h"
 #include "day_7.h"
 int main() {
 	//Ä¿¼­ ±ôºıÀÓ Á¦°Å
@@ -23,6 +24,9 @@ int main() {
 	
 	game_start_screen();
 	player* user = new player();
+	system("cls");
+	print_intro(0);
+	system("cls");
 	start_day0(user);
 	system("cls");
 	draw_ready(user,1);
@@ -41,6 +45,12 @@ int main() {
 	system("cls");
 	start_day3(user);
 	system("cls");
+	draw_ready_after(user, 3);
+	system("cls");
+	draw_ready(user, 4);
+	system("cls");
+	start_day4(user);
+	system("cls");
 	draw_ready_after(user, 4);
-	start_day7(user);
+	//start_day7(user);
 }

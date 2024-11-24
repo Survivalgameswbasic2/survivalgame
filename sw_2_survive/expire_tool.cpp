@@ -141,15 +141,11 @@ void printstat(player* user) {
 	SetConsoleCursorPosition(hConsoleOut, pos1);
 
 	std::cout << "│ 스트레스 : ";
-	for (int i = 0; i < user->mental; i++) {
-		setColor(6);
-		std::cout << " ★";
-		setColor(7);
-	}
-	for (int i = 0; i < 5 - user->mental; i++) {
-		std::cout << " ☆";
-	}
-	std::cout << "   │";
+	std::cout << user->mental;
+	pos1.X = pos1.X+ 26;
+	SetConsoleCursorPosition(hConsoleOut, pos1);
+	std::cout << "│";
+	pos1.X = pos1.X - 26;
 	pos1 = { x ,y++ };
 	SetConsoleCursorPosition(hConsoleOut, pos1);
 	std::cout << "│                         │";

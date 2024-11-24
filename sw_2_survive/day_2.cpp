@@ -6,6 +6,10 @@
 #include <iostream>
 #include "bad_ending.h"
 #include "game_map.h"
+#include<chrono>
+#include"zombie_move.h"
+#include<vector>
+#include <atomic>
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 // day 2 대화문
@@ -19,7 +23,19 @@ std::string dialogue_2[] = {
 	"“슬슬 희망이 보이기 시작했어!”"
 };
 
+std::atomic<bool> terminateZombieThread2(false);
+void zombieMoveThread2(std::vector<Zombie>& zombies, char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
+	while (!terminateZombieThread2) {
+		// 1초마다 좀비를 이동
+		std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 1초 대기
 
+		// 좀비 이동	
+		for (auto& zombie : zombies) {
+			zombie.move(map, user);
+		}
+
+	}
+}
 void start_day2(player* user) {
 	system("cls");
 	char map[MAP_HEIGHT][MAP_WIDTH + 1];
@@ -28,8 +44,27 @@ void start_day2(player* user) {
 	printstat(user); // 아이템 창 
 	updateTextBox("");
 
-	user->player_x = 5;
-	user->player_y = 6;
+
+	//좀비 생성
+	std::vector<Zombie> zombies = {
+		Zombie(13, 16, 1, 0, 2),
+		Zombie(15, 14, 1, 0, 2),
+		Zombie(14,15, 1, 0, 2),
+		Zombie(16,13, 1, 0, 2),
+		Zombie(3, 5, 1, 0, 2),
+		Zombie(32, 1, 0, 1, 2),
+		Zombie(26, 1, 0, 1, 2),
+		Zombie(11, 18, 1,0, 2),
+		Zombie(14, 4, 0, 1, 2),
+		Zombie(13, 4, 0,1, 2),
+		Zombie(18, 9, 1,0, 2),
+		Zombie(21, 12, 1,0, 2)
+	};
+	std::thread zombieThread2(zombieMoveThread2, std::ref(zombies), map, user);
+
+
+	user->player_x = 1;
+	user->player_y = 1;
 	draw_face();
 	set_hour(9);
 	std::thread timerThread(timer);
@@ -42,6 +77,10 @@ void start_day2(player* user) {
 		map[user->player_y][user->player_x] = ' ';
 		draw_sunlight(map);
 		if (get_hour() == 21) {
+			terminateZombieThread2 = true;
+			if (zombieThread2.joinable()) {
+				zombieThread2.join();
+			}
 			if (timerThread.joinable()) {
 				timerThread.join();
 			}
@@ -80,6 +119,10 @@ void start_day2(player* user) {
 				}
 				if (map[newY][newX] == '?') {
 					stop_timer_running();
+					terminateZombieThread2 = true;
+					if (zombieThread2.joinable()) {
+						zombieThread2.join();
+					}
 					if (timerThread.joinable()) {
 						timerThread.join();
 					}
@@ -115,10 +158,7 @@ void start_day2(player* user) {
 				in_dialogue = true; // 대화 상태 진입
 			}
 		}
-		if (user->heart <= 0) {
-			bad_ending();
-		}
-		if (user->mental <= 0) {
+		if (user->heart == 0) {
 			bad_ending();
 		}
 		map[user->player_y][user->player_x] = 'P';

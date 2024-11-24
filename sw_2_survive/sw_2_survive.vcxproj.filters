@@ -69,6 +69,12 @@
     <ClCompile Include="ready_screen_after.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="day_4.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="npc_image.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bad_ending.h">
@@ -120,6 +126,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ready_screen_after.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="day_4.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="npc_image.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

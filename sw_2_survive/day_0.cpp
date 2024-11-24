@@ -6,6 +6,11 @@
 #include <iostream>
 #include "bad_ending.h"
 #include "game_map.h"
+#include "npc_image.h"
+#include<chrono>
+#include"zombie_move.h"
+#include<vector>
+#include <atomic>
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 // day 0 대화문
@@ -39,6 +44,19 @@ std::string dialogue_0[] = {
 };
 
 
+std::atomic<bool> terminateZombieThread0(false);
+void zombieMoveThread0(std::vector<Zombie>& zombies, char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
+	while (!terminateZombieThread0) {
+		// 1초마다 좀비를 이동
+		std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 1초 대기
+
+		// 좀비 이동	
+		for (auto& zombie : zombies) {
+			zombie.move(map, user);
+		}
+
+	}
+}
 void start_day0(player* user) {
 	system("cls");
 	char map[MAP_HEIGHT][MAP_WIDTH + 1];
@@ -46,10 +64,16 @@ void start_day0(player* user) {
 	draw_map(map);         // 탐험 맵
 	printstat(user); // 아이템 창 
 	updateTextBox("");
-
+	printplayer();
 	user->player_x = 5;
 	user->player_y = 6;
-	draw_face();
+	//좀비 생성
+	std::vector<Zombie> zombies = {
+		Zombie(9, 7, 1, 0, 0)
+	};
+	std::thread zombieThread0(zombieMoveThread0, std::ref(zombies), map, user);
+
+
 	set_hour(9);
 	std::thread timerThread(timer);
 
@@ -59,8 +83,12 @@ void start_day0(player* user) {
 	map[user->player_y][user->player_x] = 'P';
 	while (true) {
 		map[user->player_y][user->player_x] = ' ';
-		//draw_sunlight(map);
+		draw_sunlight(map);
 		if (get_hour() == 21) {
+			terminateZombieThread0 = true;
+			if (zombieThread0.joinable()) {
+				zombieThread0.join();
+			}
 			if (timerThread.joinable()) {
 				timerThread.join();
 			}
@@ -99,6 +127,10 @@ void start_day0(player* user) {
 				}
 				if (map[newY][newX] == '?') {
 					stop_timer_running();
+					terminateZombieThread0 = true;
+					if (zombieThread0.joinable()) {
+						zombieThread0.join();
+					}
 					if (timerThread.joinable()) {
 						timerThread.join();
 					}
