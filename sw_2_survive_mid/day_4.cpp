@@ -10,6 +10,7 @@
 #include<chrono>
 #include"zombie_move.h"
 #include <atomic>
+#include "npc_image.h"
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 
@@ -17,9 +18,6 @@
 std::vector<std::vector<std::string>> dialogue_4 = {
 	{
 	"플레이어: 여기에 무기가 있다는 건가. 좋아 열심히 찾아보자"
-},
-{
-	"플레이어:　좋아 이제 총을 얻었으니 탄창만 있으면 좀비를 쓰러뜨릴수 있을 지도 몰라! 빨리 그 사기꾼을 찾아 내 물품을 되찾아야겠어."
 },
 {
 	"생존자: 앗 사람이다! 저기요 여기 좀 도와주세요!",
@@ -41,6 +39,10 @@ std::vector<std::vector<std::string>> dialogue_4 = {
 "플레이어: 그리고 여기 이쪽으로 가면 피난처가 있다고 해요. 그쪽으로 가세요.",
 "생존자: 앗 정보 감사합니다. 확실히 그쪽으로 갈 생각은 못 하긴 했어요. 그럼 먼저 피난처로 가겠습니다. 정말 감사합니다!"
 }
+};
+
+std::string gun_dialogue = {
+	"플레이어:　좋아 이제 총을 얻었으니 탄창만 있으면 좀비를 쓰러뜨릴수 있을 지도 몰라! 빨리 그 사기꾼을 찾아 내 물품을 되찾아야겠어."
 };
 std::atomic<bool> terminateZombieThread4(false);
 void zombieMoveThread4(std::vector<Zombie>& zombies, char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
@@ -89,10 +91,10 @@ void start_day4(player* user) {
 
 	user->player_x = 1;
 	user->player_y = 1;
-	draw_face();
+	printplayer();
 	set_hour(9);
 	std::thread timerThread(timer);
-
+	bool is_food_water_get = false;
 	int dialogue_line = 0;
 	bool in_dialogue = true;
 	int flag = 0;
@@ -127,15 +129,14 @@ void start_day4(player* user) {
 						set_isExplore(true);
 						dialogue_line = 0;
 						dialogue_num++;
-						if (dialogue_num == 1) {
-							map[1][11] = ' ';
-							map[10][32] = 'N';
-						}
-						else if (dialogue_num == 2) {
-							map[10][32] = ' ';
-						}
-						else if (dialogue_num == 3) {
-							dialogue_num = 2;
+						if (dialogue_num == 2) {
+							dialogue_num = 1;
+							if (is_food_water_get == false) {
+								user->food++;
+								user->water++;
+								is_food_water_get = true;
+								printstat(user);
+							}
 						}
 					}
 				}
@@ -176,20 +177,19 @@ void start_day4(player* user) {
 					user->player_x = newX;
 					user->player_y = newY;
 					user->mental--;
-					updateTextBox("햇빛에 데미지를 받았다");
+					updateTextBox("으윽... 역시 햇빛은  따갑네 오래 있으면 안될 것 같아.");
 				}
 				else if (is_zombie_position(newX, newY, map)) {
 					user->heart--;
 					printstat(user);
-					setCursorPosition(1, 23);
-					updateTextBox("좀비에게 데미지를 입었다.");
+					updateTextBox("크흑, 좀비한테 당했어");
 				}
 			}
 			else if (key == ' ' && is_player_near_item(user, map)) { // 엔터키로 아이템 획득
 				map[newY][newX] = ' ';
 				if (user->gun == 1 && get_gun_dialogue == false) {
-					in_dialogue = true;
 					get_gun_dialogue = true;
+					updateDialogue(gun_dialogue);
 				}
 			}
 			else if (key == ' ' && is_player_near_npc(user, map)) { // 스페이스바로 NPC와 대화
@@ -197,6 +197,11 @@ void start_day4(player* user) {
 				dialogue_clear();
 				updateDialogue(dialogue_4[dialogue_num][dialogue_line++]);
 				in_dialogue = true; // 대화 상태 진입
+			}
+			if (is_player_near_zombie(user, map) == true) {
+				user->mental -= 2;
+				printstat(user);
+				updateTextBox("...불안해, 무서워... 아무리봐도 좀비는 적응이 안가네");
 			}
 		}
 		if (user->heart <= 0) {

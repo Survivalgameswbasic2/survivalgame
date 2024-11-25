@@ -10,17 +10,23 @@
 #include"zombie_move.h"
 #include<vector>
 #include <atomic>
+#include "npc_image.h"
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 // day 2 대화문
-std::string dialogue_2[] = {
-	"“원래 여기는 캠핑장 이었나보네... 하긴 이렇게 여기 강과 아름다운 자연의 흔적이 있으니까. 지금은 오염된 강과 말그대로 흔적뿐이지만..”",
-	"“아무튼 여기서 무전기 부품으로 쓸만한 것이든, 지연제 재료든, 식량이든 물이든, 구할 수 있는 것은 다 구하는거야!”",
-	"",
-	"전단지 발견:",
-	"“이건...앗 멀지 않은 곳에 도심이 있네? 게다가 거기에 피난처도 있다고? 미쳐 다 빠져 나가지 못한 사람들이 서로 도우며 임시 피난처를 만든 건가?”",
-	"“좋아. 슬슬 도심으로 나가도 되겠지. 그래 거기엔 분명 사람도 있을꺼야!”",
-	"“슬슬 희망이 보이기 시작했어!”"
+std::vector<std::vector<std::string>> dialogue_2 = {
+	// 초기 위치시 대화
+	{
+		"원래 여기는 캠핑장이었나보네... 하긴 이렇게 여기 강과 아름다운 자연의 흔적이 있으니까. 지금은 오염된 강과 말 그대로 흔적뿐이지만..",
+		"아무튼 여기서 무전기 부품으로 쓸만한 것이든, 지연제 재료든, 식량이든 물이든, 구할 수 있는 것은 다 구하는거야!"
+	},
+	// 전단지 발견시 대화
+	{
+		"이건...앗 멀지 않은 곳에 도심이 있네? 게다가 거기에 피난처도 있다고?",
+		"미쳐 다 빠져 나가지 못한 사람들이 서로 도우며 임시 피난처를 만든 건가?",
+		"좋아. 슬슬 도심으로 나가도 되겠지. 그래 거기엔 분명 사람도 있을꺼야!",
+		"슬슬 희망이 보이기 시작했어!"
+	}
 };
 
 std::atomic<bool> terminateZombieThread2(false);
@@ -65,14 +71,17 @@ void start_day2(player* user) {
 
 	user->player_x = 1;
 	user->player_y = 1;
-	draw_face();
+	printplayer();
 	set_hour(9);
 	std::thread timerThread(timer);
 
 	int dialogue_line = 0;
-	bool in_dialogue = false;
+	bool in_dialogue = true;
 	int flag = 0;
+	int dialogue_num = 0;
 	map[user->player_y][user->player_x] = 'P';
+	draw_map(map);
+
 	while (true) {
 		map[user->player_y][user->player_x] = ' ';
 		draw_sunlight(map);
@@ -91,15 +100,19 @@ void start_day2(player* user) {
 			if (_kbhit()) {
 				int key = _getch();
 				if (key == ' ') { // 스페이스바로 대화 진행
-					if (dialogue_line < sizeof(dialogue_2) / sizeof(dialogue_2[0])) {
-						updateDialogue(dialogue_2[dialogue_line++]);
+					if (dialogue_line < dialogue_2[dialogue_num].size()) {
+						updateDialogue(dialogue_2[dialogue_num][dialogue_line++]);
 					}
 					else {
 						// 대화 종료
-
 						dialogue_clear();
 						in_dialogue = false;
 						set_isExplore(true);
+						dialogue_line = 0;
+						dialogue_num++;
+						if (dialogue_num > 1) {
+							dialogue_num = 1;
+						}
 					}
 				}
 			}
@@ -139,7 +152,7 @@ void start_day2(player* user) {
 					user->player_x = newX;
 					user->player_y = newY;
 					user->mental--;
-					updateTextBox("햇빛에 스트레스를 받았다");
+					updateTextBox("햇빛에 데미지를 받았다");
 				}
 				else if (is_zombie_position(newX, newY, map)) {
 					user->heart--;
@@ -154,11 +167,14 @@ void start_day2(player* user) {
 			else if (key == ' ' && is_player_near_npc(user, map)) { // 스페이스바로 NPC와 대화
 				set_isExplore(false);
 				dialogue_clear();
-				updateDialogue(dialogue_2[dialogue_line++]);
+				updateDialogue(dialogue_2[dialogue_num][dialogue_line++]);
 				in_dialogue = true; // 대화 상태 진입
 			}
 		}
-		if (user->heart == 0) {
+		if (user->heart <= 0) {
+			bad_ending();
+		}
+		if (user->mental <= 0) {
 			bad_ending();
 		}
 		map[user->player_y][user->player_x] = 'P';

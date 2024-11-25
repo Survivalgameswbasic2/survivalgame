@@ -23,7 +23,7 @@ void print_intro(int day) {
 		setCursorPosition(1, 5);
 		printf("목표: 동굴 내부를 탐사하자");
 		setCursorPosition(1, 7);
-		printf("이동키: a w s d 키");
+		printf("이동키: 상 하 좌 우 키");
 		setCursorPosition(1, 8);
 		printf("상호작용키: 스페이스키");
 	}

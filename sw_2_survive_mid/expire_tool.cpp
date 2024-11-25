@@ -7,6 +7,7 @@
 #include <thread>
 #include <string>
 #include "mutex_helper.h"
+#include <vector>
 #define STAGE_WIDTH 68  // 스테이지의 너비
 #define STAGE_HEIGHT 20 // 스테이지의 높이 
 
@@ -227,7 +228,7 @@ void timer() {
 		if (isExplore) {
 			std::this_thread::sleep_for(std::chrono::seconds(1)); // 1초마다 감소
 
-			current_time+=20;
+			current_time+=10;
 			if (current_time >= 60) {
 				current_time = 0;
 				hour += 1;
@@ -250,6 +251,53 @@ void timer() {
 		}
 	}
 }
+void timer2() {
+	COORD timer_pos = { 1,0 };
+	std::string erase = { "                                                          " };
+	std::string gage= {" "};
+	int percent = 0;
+	int percent_in = 0;
+	{
+		std::lock_guard<std::mutex> lock(bufferMutex);
+		setColor(12);
+		setCursorPosition(timer_pos.X, timer_pos.Y);
+		std::cout << erase;
+		setCursorPosition(timer_pos.X, timer_pos.Y);
+		std::cout << percent << "%  " << gage;
+		setColor(7);
+	}
+	timerRunning = true;
+	isExplore = true;
+	int count = 0;
+	while (timerRunning) {
+		if (isExplore) {
+			std::this_thread::sleep_for(std::chrono::seconds(1)); // 1초마다 감소
+
+			percent += 1;
+			percent_in += 1;
+			if (percent_in >= 2) {
+				percent_in = 0;
+				gage += "■ ";
+				if (percent >= 100) {
+					break;
+				}
+			}
+			{
+				std::lock_guard<std::mutex> lock(bufferMutex);
+				setColor(12);
+				setCursorPosition(timer_pos.X, timer_pos.Y);
+				std::cout << erase;
+				setCursorPosition(timer_pos.X, timer_pos.Y);
+				std::cout << percent << "%  " << gage;
+				setColor(7);
+			}
+		}
+		else {
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		}
+	}
+}
+
 // hour 반환
 int get_hour() {
 	return hour;

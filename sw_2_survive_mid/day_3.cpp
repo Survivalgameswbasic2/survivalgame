@@ -10,6 +10,7 @@
 #include<chrono>
 #include"zombie_move.h"
 #include <atomic>
+#include "npc_image.h"
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 
@@ -17,7 +18,9 @@
 std::vector<std::vector<std::string>> dialogue_3 = {
 	{
 	"플레이어: 여기에 연구원이 말한 치료제가 있다고 했지...",
-	"???: 이 목소린 사람? 여기에요! 여기에 사람이 있어요!",
+	"???: 이 목소린 사람? 여기에요! 여기에 사람이 있어요!"
+	},
+{
 	"플레이어: 누구시죠? 어째서 여기에 있나요?",
 	"np3: 앗 저는 그저 좀비를 피해다니다가 넘어져서 상처 치료할 만한게 없나 확인 하려고...",
 	"플레이어: 여기도 좀비가 많은데 괜찮나요?",
@@ -117,15 +120,17 @@ void start_day3(player* user) {
 
 	user->player_x = 5;
 	user->player_y = 6;
-	draw_face();
+	printplayer();
 	set_hour(9);
 	std::thread timerThread(timer);
 
 	int dialogue_line = 0;
-	bool in_dialogue = false;
+	bool in_dialogue = true;
 	int flag = 0;
 	int dialogue_num = 0;
 	map[user->player_y][user->player_x] = 'P';
+	draw_map(map);
+	set_isExplore(false);// 확인
 	while (true) {
 		map[user->player_y][user->player_x] = ' ';
 		draw_sunlight(map);
@@ -154,15 +159,21 @@ void start_day3(player* user) {
 						set_isExplore(true);
 						dialogue_line = 0;
 						dialogue_num++;
-						if (dialogue_num == 1) {
+						if (dialogue_num == 2) {
+							user->food--;
+							user->water--;
+							if (user->food < 0) user->food = 0;
+							if (user->water < 0)user->water = 0;
 							map[1][11] = ' ';
 							map[10][32] = 'N';
 						}
-						else if (dialogue_num == 2) {
+						else if (dialogue_num == 3) {
 							map[10][32] = ' ';
+							if (user->food > 1) user->food = 1;
+							if (user->water > 1) user->water = 1;
 						}
-						else if(dialogue_num==3){
-							dialogue_num = 2;
+						else if(dialogue_num==4){
+							dialogue_num = 3;
 						}
 					}
 				}
@@ -203,13 +214,12 @@ void start_day3(player* user) {
 					user->player_x = newX;
 					user->player_y = newY;
 					user->mental--;
-					updateTextBox("햇빛에 데미지를 받았다");
+					updateTextBox("으윽... 역시 햇빛은  따갑네 오래 있으면 안될 것 같아.");
 				}
 				else if (is_zombie_position(newX, newY, map)) {
 					user->heart--;
 					printstat(user);
-					setCursorPosition(1, 23);
-					updateTextBox("좀비에게 데미지를 입었다.");
+					updateTextBox("크흑, 좀비한테 당했어");
 				}
 			}
 			else if (key == ' ' && is_player_near_item(user, map)) { // 엔터키로 아이템 획득
@@ -220,6 +230,11 @@ void start_day3(player* user) {
 				dialogue_clear();
 				updateDialogue(dialogue_3[dialogue_num][dialogue_line++]);
 				in_dialogue = true; // 대화 상태 진입
+			}
+			if (is_player_near_zombie(user, map) == true) {
+				user->mental -= 2;
+				printstat(user);
+				updateTextBox("...불안해, 무서워... 아무리봐도 좀비는 적응이 안가네");
 			}
 		}
 		if (user->heart <= 0) {

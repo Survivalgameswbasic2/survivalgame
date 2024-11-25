@@ -84,3 +84,13 @@ void printnpc1() {
     SetConsoleOutputCP(oldCP);
 
 }
+
+
+void clear_npc_screen() {
+    int x = 75;
+    int y = 10;
+    for (int i = 0; i < 12; i++) {
+        setCursorPosition(x, y+i);
+        std::cout << "                                ";
+    }
+}

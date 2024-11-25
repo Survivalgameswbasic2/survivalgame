@@ -164,6 +164,20 @@ bool is_player_near_npc(player* user, char map[][MAP_WIDTH + 1]) {
     return false;
 }
 
+bool is_player_near_zombie(player* user, char map[][MAP_WIDTH + 1]) {
+    int dx[] = { -1, 1, 0, 0 };
+    int dy[] = { 0, 0, -1, 1 };
+
+    for (int i = 0; i < 4; i++) {
+        newX = user->player_x + dx[i];
+        newY = user->player_y + dy[i];
+        if (newX >= 0 && newX < MAP_WIDTH && newY >= 0 && newY < MAP_HEIGHT &&
+            map[newY][newX] == 'x') {
+            return true;
+        }
+    }
+    return false;
+}
 bool is_player_near_item(player* user, char map[][MAP_WIDTH + 1]) {
     int dx[] = { -1, 1, 0, 0 };
     int dy[] = { 0, 0, -1, 1 };
@@ -176,7 +190,7 @@ bool is_player_near_item(player* user, char map[][MAP_WIDTH + 1]) {
         case 'F': // ½Ä·®
             user->food++;
             map[newY][newX] = ' ';
-            updateTextBox("½Ä·®: µüºÁµµ ¸À¾ø¾î º¸ÀÌ´Â");
+            updateTextBox("½Ä·®: µüºÁµµ ¸À¾ø¾î º¸ÀÎ´Ù");
             printstat(user);
             break;
         case 'W': // ¹°
@@ -239,7 +253,7 @@ void draw_map(char map[][MAP_WIDTH + 1]) {
             /*case '%': colorSetBack(6, 6); std::cout << "  "; setColor(7); break;*/
             case '%': setColor(6); std::cout << "*"; setColor(7); break;
             case '?': setColor(11); printf("¡á "); setColor(7); break;
-            case 'P': setColor(3); std::cout << "¿ô"; setColor(7); break;
+            case 'P': setColor(2); std::cout << "¡á"; setColor(7); break;
             case '*': std::cout << "¢´"; break;
             case 'G': setColor(15); std::cout << "¡þ"; setColor(7); break;
             case 'B': setColor(15); std::cout << "¤ý"; setColor(7); break;

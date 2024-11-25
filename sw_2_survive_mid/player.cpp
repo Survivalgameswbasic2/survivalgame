@@ -8,8 +8,8 @@ player::player() {
 	medicine = 0;
 	heart = 5;
 	mental = 100;
-	food = 0;
-	water = 0;
+	food = 5;
+	water = 5;
 	bullet = 0;
 	player_x = 1;
 	player_y = 0;

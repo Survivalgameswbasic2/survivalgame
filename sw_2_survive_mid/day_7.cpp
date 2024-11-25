@@ -9,6 +9,7 @@
 #include <vector>
 #include "Zombies.h"
 #include <mutex>
+#include "npc_image.h"
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 
@@ -54,10 +55,10 @@ void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
             map[z->y][z->x] = ' ';
 
             // 플레이어를 향한 이동 계산
-            if (z->x < user->player_x && map[z->y][z->x + 1] !='*') z->x++;
-            else if (z->x > user->player_x && map[z->y][z->x -1] != '*') z->x--;
-            if (z->y < user->player_y && map[z->y+1][z->x] != '*') z->y++;
-            else if (z->y > user->player_y && map[z->y-1][z->x] != '*') z->y--;
+            if (z->x < user->player_x && map[z->y][z->x + 1] ==' ') z->x++;
+            else if (z->x > user->player_x && map[z->y][z->x -1] == ' ') z->x--;
+            if (z->y < user->player_y && map[z->y+1][z->x] == ' ') z->y++;
+            else if (z->y > user->player_y && map[z->y-1][z->x] == ' ') z->y--;
 
             // 충돌 체크
             if (z->x == user->player_x && z->y == user->player_y) {
@@ -78,7 +79,7 @@ void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
 
 void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
     while (true) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(200)); // 0.1초 대기
+        std::this_thread::sleep_for(std::chrono::milliseconds(400)); // 0.1초 대기
         std::lock_guard<std::mutex> lock(bulletMutex);
 
         for (auto it = bullets.begin(); it != bullets.end();) {
@@ -140,20 +141,21 @@ void start_day7(player* user) {
     printstat(user); // 아이템 창 
     updateTextBox("");
 
-    user->player_x = 5;
-    user->player_y = 6;
-    draw_face();
+    user->player_x = 10;
+    user->player_y = 10;
+    printplayer();
     set_hour(9);
-    std::thread timerThread(timer);
-
+    std::thread timerThread(timer2);
+    std::thread zombieSpawnThread(spawn_zombies, map, user, 3, 3);
+    std::thread zombieSpawnThread2(spawn_zombies, map, user, 3, 17);
+    std::thread zombieSpawnThread5(spawn_zombies, map, user, 15, 3);
+    std::thread zombieSpawnThread3(spawn_zombies, map, user, 31, 4);
+    std::thread zombieSpawnThread4(spawn_zombies, map, user, 31, 17);
+    std::thread zombieSpawnThread6(spawn_zombies, map, user, 15, 17);
     int dialogue_line = 0;
     bool in_dialogue = false;
     int flag = 0;
     int dialogue_num = 0;
-    std::thread zombieSpawnThread(spawn_zombies, map, user, 2, 4);
-    std::thread zombieSpawnThread2(spawn_zombies, map, user, 2, 17);
-    std::thread zombieSpawnThread3(spawn_zombies, map, user, 31, 4);
-    std::thread zombieSpawnThread4(spawn_zombies, map, user, 31, 17);
 
     std::thread zombieMoveThread(move_zombies, map, user);
     std::thread bulletMoveThread(move_bullets, map);

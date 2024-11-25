@@ -28,6 +28,7 @@ void printstat(player* user);
 void draw_face();
 void stop_timer_running();
 void timer();
+void timer2();
 void start_timer_running();
 int get_hour();
 void set_hour(int h);

@@ -6,5 +6,5 @@
 
 // 전역 mutex 선언
 extern std::mutex bufferMutex;
-
+extern std::mutex zombieMutex2;
 #endif // MUTEX_HELPER_H
