@@ -15,4 +15,5 @@ bool is_zombie_position(int x, int y, char map[][MAP_WIDTH + 1]);
 
 void copy_map(int day_num, char map[][MAP_WIDTH+1]);
 void draw_map(char map[][MAP_WIDTH + 1]);
+void meet_zombie_change_edge();
 #endif

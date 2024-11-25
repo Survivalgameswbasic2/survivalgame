@@ -270,3 +270,35 @@ void copy_map(int day_num, char map[][MAP_WIDTH+1]) {
         }
     }
 }
+
+
+void meet_zombie_change_edge() {
+	char edge[MAP_HEIGHT][MAP_WIDTH + 1] =
+	{
+	"##################################",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"#                                #",
+	"##################################"
+	};
+	for (int y = 0; y < MAP_HEIGHT; y++) {
+		for (int x = 0; x < MAP_WIDTH; x++) {
+			setCursorPosition(x * 2 + 1, y + 1);
+			if (edge[y][x] == '#') { setColor(12); printf("бс "); setColor(7); }
+		}
+	}
+}

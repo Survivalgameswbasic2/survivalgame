@@ -220,6 +220,7 @@ void start_day3(player* user) {
 					user->heart--;
 					printstat(user);
 					updateTextBox("크흑, 좀비한테 당했어");
+					meet_zombie_change_edge();
 				}
 			}
 			else if (key == ' ' && is_player_near_item(user, map)) { // 엔터키로 아이템 획득

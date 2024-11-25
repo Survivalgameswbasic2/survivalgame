@@ -231,6 +231,7 @@ void start_day7(player* user) {
                     printstat(user);
                     setCursorPosition(1, 23);
                     updateTextBox("좀비에게 데미지를 입었다.");
+					meet_zombie_change_edge();	
                 }
             }
             else if (key == 's' && bullet_num>0) { // 's' 키로 총알 발사

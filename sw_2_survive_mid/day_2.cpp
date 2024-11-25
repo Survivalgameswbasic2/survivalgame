@@ -159,6 +159,7 @@ void start_day2(player* user) {
 					printstat(user);
 					setCursorPosition(1, 23);
 					updateTextBox("좀비에게 데미지를 입었다.");
+					meet_zombie_change_edge();
 				}
 			}
 			else if (key == ' ' && is_player_near_item(user, map)) { // 엔터키로 아이템 획득
