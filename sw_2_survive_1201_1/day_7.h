@@ -1,4 +1,4 @@
 #ifndef DAY_7_H
 #define DAY_7_H
-void start_day7(player* user, BackP* user_back);
+void start_day7(player* user);
 #endif

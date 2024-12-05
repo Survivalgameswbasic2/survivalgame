@@ -2,5 +2,5 @@
 #define DAY_2_H
 
 
-void start_day2(player* user, BackP* user_back);
+void start_day2(player* user);
 #endif

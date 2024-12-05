@@ -3,10 +3,6 @@
 #include <windows.h>
 #include <conio.h>
 #include "expire_tool.h"
-void setConsoleSize(int width, int height) {
-	std::string command = "mode " + std::to_string(width) + "," + std::to_string(height);
-	system(command.c_str());
-}
 
 
 

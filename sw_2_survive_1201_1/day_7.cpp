@@ -10,7 +10,7 @@
 #include "Zombies.h"
 #include <mutex>
 #include "npc_image.h"
-#include "backpack.h"
+
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 
@@ -20,20 +20,20 @@ std::string dialogue_7[] = {
 
 std::vector<Zombies*> zombies;
 std::mutex zombieMutex;
-int bullet_num = 3;
-int playerDirection = 3; // 0: 위, 1: 아래, 2: 왼쪽, 3: 오른쪽 (초기 값은 오른쪽)
+static int bullet_num = 3;
+static int playerDirection = 3; // 0: 위, 1: 아래, 2: 왼쪽, 3: 오른쪽 (초기 값은 오른쪽)
 
-struct Bullet {
+static struct Bullet {
     int x;
     int y;
     int direction;
     int distanceTraveled;
 };
 
-std::vector<Bullet> bullets;
-std::mutex bulletMutex;
+static std::vector<Bullet> bullets;
+static std::mutex bulletMutex;
 
-void spawn_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user, int spawn_x, int spawn_y) {
+static void spawn_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user, int spawn_x, int spawn_y) {
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(5)); // 3초 대기
 
@@ -44,7 +44,7 @@ void spawn_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user, int spawn_
     }
 }
 
-void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
+static void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(1)); // 1초 대기
 
@@ -78,7 +78,7 @@ void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
     }
 }
 
-void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
+static void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
     while (true) {
         std::this_thread::sleep_for(std::chrono::milliseconds(400)); // 0.1초 대기
         std::lock_guard<std::mutex> lock(bulletMutex);
@@ -134,7 +134,7 @@ void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
 }
 
 
-void start_day7(player* user, BackP* user_back) {
+void start_day7(player* user) {
     system("cls");
     char map[MAP_HEIGHT][MAP_WIDTH + 1];
     copy_map(5, map);
@@ -268,12 +268,12 @@ void start_day7(player* user, BackP* user_back) {
 					meet_zombie_change_edge();	
                 }
             }
-            else if (key == 's' && bullet_num>0) { // 's' 키로 총알 발사
+            else if (key == 's' && bullet_num>0&&user->gun>=1) { // 's' 키로 총알 발사
                 std::lock_guard<std::mutex> lock(bulletMutex);
                 bullet_num--;
                 bullets.push_back({ user->player_x, user->player_y, playerDirection, 0 });
             }
-            else if (key == ' ' && is_player_near_item(user, map, user_back)) { // 엔터키로 아이템 획득
+            else if (key == ' ' && is_player_near_item(user, map)) { // 엔터키로 아이템 획득
                 map[user->player_y][user->player_x] = ' ';
             }
             else if (key == ' ' && is_player_near_npc(user, map)) { // 스페이스바로 NPC와 대화

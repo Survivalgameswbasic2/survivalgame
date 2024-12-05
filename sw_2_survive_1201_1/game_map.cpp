@@ -2,7 +2,6 @@
 #include "player.h"
 #include "Windows.h"
 #include "mutex_helper.h"
-#include "backpack.h"
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 int newX, newY;
@@ -202,7 +201,7 @@ bool is_player_near_zombie(player* user, char map[][MAP_WIDTH + 1]) {
     }
     return false;
 }
-bool is_player_near_item(player* user, char map[][MAP_WIDTH + 1], BackP* user_back) {
+bool is_player_near_item(player* user, char map[][MAP_WIDTH + 1]) {
     int dx[] = { -1, 1, 0, 0 };
     int dy[] = { 0, 0, -1, 1 };
 
@@ -212,53 +211,41 @@ bool is_player_near_item(player* user, char map[][MAP_WIDTH + 1], BackP* user_ba
         char item_type = map[newY][newX];
         switch (item_type) {
         case 'F': // 식량
-            if (user_back->checkweight()) {
-                user_back->food++;
+                user->food++;
                 map[newY][newX] = ' ';
                 updateTextBox("식량: 딱봐도 맛없어 보인다");
                 printstat(user);
-            }
-            else {
-                updateTextBox("가방이 꽉차서 가질 수 없다.");
-            }
             break;
         case 'W': // 물
-            if (user_back->checkweight()) {
-                user_back->water++;
+  
+                user->water++;
                 map[newY][newX] = ' ';
                 updateTextBox("물: 인간의 생존에는 반드시 필요한 물이다");
                 printstat(user);
-            }
-            else {
-                updateTextBox("가방이 꽉차서 가질 수 없다.");
-            }
             break;
         case 'M': // 치료제
-            if (user_back->checkweight()) {
-                user_back->medicine++;
+          
+                user->medicine++;
                 map[newY][newX] = ' ';
                 updateTextBox("치료제: 연구원의 말에 따르면 좀비백신은 없다고 한다. 그러나 좀비화는 지연시킬수도 있을 것 같다");
                 printstat(user);
-            }
-            else {
-                updateTextBox("가방이 꽉차서 가질 수 없다.");
-            }
+            
             printstat(user);
             break;
         case '!': // 무전기
-            user_back->radio++;
+            user->radio++;
             map[newY][newX] = ' ';
             updateTextBox("무전기를 획득했습니다! 특수 아이템입니다!");
             printstat(user);
             break;
         case 'G': // 총
-            user_back->gun++;
+            user->gun++;
             map[newY][newX] = ' ';
             updateTextBox("총기: 강력한 한발을 때리는 총기다!");
             printstat(user);
             break;
         case 'B': // 총알
-            user_back->bullet++;
+            user->bullet++;
             map[newY][newX] = ' ';
             updateTextBox("탄창: 탄창안에 총알이 그럭저럭 있다. 총만 있으면 좀비를 처리할수도?");
             printstat(user);

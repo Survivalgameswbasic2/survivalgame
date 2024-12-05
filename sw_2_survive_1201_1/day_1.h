@@ -3,5 +3,5 @@
 
 
 
-void start_day1(player* user, BackP* user_back);
+void start_day1(player* user);
 #endif

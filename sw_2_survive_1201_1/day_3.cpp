@@ -11,7 +11,6 @@
 #include"zombie_move.h"
 #include <atomic>
 #include "npc_image.h"
-#include "backpack.h"
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 
@@ -92,7 +91,7 @@ void zombieMoveThread3(std::vector<Zombie>& zombies, char map[MAP_HEIGHT][MAP_WI
 		}
 	}
 }
-void start_day3(player* user, BackP* user_back) {
+void start_day3(player* user) {
 	system("cls");
 	char map[MAP_HEIGHT][MAP_WIDTH + 1];
 	copy_map(3, map);
@@ -257,7 +256,7 @@ void start_day3(player* user, BackP* user_back) {
 					meet_zombie_change_edge();
 				}
 			}
-			else if (key == ' ' && is_player_near_item(user, map, user_back)) { // 엔터키로 아이템 획득
+			else if (key == ' ' && is_player_near_item(user, map)) { // 엔터키로 아이템 획득
 				map[newY][newX] = ' ';
 			}
 			else if (key == ' ' && is_player_near_npc(user, map)) { // 스페이스바로 NPC와 대화
@@ -275,13 +274,16 @@ void start_day3(player* user, BackP* user_back) {
 		if (user->heart <= 0) {
 			stop_timer_running();
 			terminateZombieThread3 = true;
-			if (zombieThread3.joinable()) {
-				zombieThread3.join();
-			}
-			if (timerThread.joinable()) {
-				timerThread.join();
-			}
+			if (zombieThread3.joinable()) {zombieThread3.join();}
+			if (timerThread.joinable()) {timerThread.join();}
 			bad_ending_zombie();
+		}
+		if (user->mental <= 0) {
+			stop_timer_running();
+			terminateZombieThread3 = true;
+			if (zombieThread3.joinable()) { zombieThread3.join(); }
+			if (timerThread.joinable()) { timerThread.join(); }
+			bad_ending_starve();
 		}
 		map[user->player_y][user->player_x] = 'P';
 		draw_map(map);

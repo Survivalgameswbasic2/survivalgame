@@ -11,7 +11,7 @@
 #include"zombie_move.h"
 #include<vector>
 #include <atomic>
-#include "backpack.h"
+
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 // day 0 대화문
@@ -68,7 +68,7 @@ void zombieMoveThread0(std::vector<Zombie>& zombies, char map[MAP_HEIGHT][MAP_WI
 
 	}
 }
-void start_day0(player* user, BackP* user_back) {
+void start_day0(player* user) {
 	system("cls");
 	char map[MAP_HEIGHT][MAP_WIDTH + 1];
 	copy_map(0, map);
@@ -208,7 +208,7 @@ void start_day0(player* user, BackP* user_back) {
 					meet_zombie_change_edge();
 				}
 			}
-			else if (key == ' ' && is_player_near_item(user, map,user_back)) { // 엔터키로 아이템 획득
+			else if (key == ' ' && is_player_near_item(user,map)) { // 엔터키로 아이템 획득
 				map[newY][newX] = ' ';
 			}
 			else if (key == ' ' && is_player_near_npc(user, map)) { // 스페이스바로 NPC와 대화
@@ -236,7 +236,13 @@ void start_day0(player* user, BackP* user_back) {
 			}
 			bad_ending_zombie();
 		}
-
+		if (user->mental <= 0) {
+			stop_timer_running();
+			terminateZombieThread0 = true;
+			if (zombieThread0.joinable()) {zombieThread0.join();}
+			if (timerThread.joinable()) {timerThread.join();}
+			bad_ending_starve();
+		}
 		map[user->player_y][user->player_x] = 'P';
 		draw_map(map);
 	}
