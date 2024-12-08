@@ -15,7 +15,8 @@ void Zombie::move(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
 	int next_y = y + dy;
 
 	//벽/좀비/햇빛/플레이어에 부딪히면 이동방향 반대로
-	if (map[next_y][next_x] == '#' || map[next_y][next_x] == '%'|| map[next_y][next_x] == 'x' || (user->player_x == next_x && user->player_y == next_y)|| map[next_y][next_x]=='A') {
+	if (map[next_y][next_x] == '#' || map[next_y][next_x] == '%'|| map[next_y][next_x] == 'x' || map[next_y][next_x] == 'Z'
+		 || (user->player_x == next_x && user->player_y == next_y)|| map[next_y][next_x]=='A') {
 		if (user->player_x == next_x && user->player_y == next_y) {
 			user->heart--;
 			PlaySound(TEXT("hurt.wav"), NULL, SND_ASYNC);

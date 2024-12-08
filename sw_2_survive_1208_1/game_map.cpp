@@ -126,7 +126,7 @@ char game_map[20][MAP_HEIGHT][MAP_WIDTH + 1] =
 //day 5
 {//2,7 -> 19,16
     "#############################?####",
-    "# G####    F#### x ####W    #!   #",
+    "#  ####    F#### x ####W    #!   #",
     "#  #    x   #x     #B #     x### #",
     "#x #  #######  #####  ######   #z#",
     "#  #x         ### ###          # #",
@@ -406,12 +406,11 @@ void is_player_near_explosive_zombie(player* user, char map[][MAP_WIDTH + 1]) {
 			}
 		}
 	}
-
 }
 
 
 void handle_zombie_death_effect(int zx, int zy, char map[][MAP_WIDTH + 1]) {
-	for (int blink = 0; blink < 3; ++blink) {
+	for (int blink = 0; blink < 1; ++blink) {
 		map[zy][zx] = (blink % 2 == 0) ? 'b' : ' ';
 		draw_map(map);
 	}
