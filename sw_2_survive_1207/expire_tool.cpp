@@ -378,7 +378,7 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 18; h >= 12; h--) {
 			int w = 32;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if(map[h][w]==' ')
 				map[h][w] = '%';
 				w--;
@@ -389,7 +389,7 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 18; h >= 6; h--) {
 			int w = 32;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')
 				map[h][w] = '%';
 				w--;
@@ -400,7 +400,7 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 18; h >= 1; h--) {
 			int w = 32;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')
 				map[h][w] = '%';
 				w--;
@@ -411,14 +411,14 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 12; h >= 1; h--) {
 			int w = 32;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] !='A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				w--;
 			}
 		}
 		for (int w = 32; w >= 24; w--) {
 			int h = 1;
-			while (h >= 0 && map[h][w] != '#') {
+			while (h >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				h++;
 			}
@@ -428,14 +428,14 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 6; h >= 1; h--) {
 			int w = 32;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				w--;
 			}
 		}
 		for (int w = 32; w >= 16; w--) {
 			int h = 1;
-			while (h >= 0 && map[h][w] != '#') {
+			while (h >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				h++;
 			}
@@ -445,7 +445,7 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int w = 32; w >= 8; w--) {
 			int h = 1;
-			while (h >= 0 && map[h][w] != '#') {
+			while (h >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				h++;
 			}
@@ -455,7 +455,7 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int w = 32; w >= 1; w--) {
 			int h = 1;
-			while (h >= 0 && map[h][w] != '#') {
+			while (h >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				h++;
 			}
@@ -465,14 +465,14 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 6; h >= 1; h--) {
 			int w = 1;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				w++;
 			}
 		}
 		for (int w = 24; w >= 1; w--) {
 			int h = 1;
-			while (h >= 0 && map[h][w] != '#') {
+			while (h >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				h++;
 			}
@@ -482,14 +482,14 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 12; h >= 1; h--) {
 			int w = 1;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				w++;
 			}
 		}
 		for (int w = 16; w >= 1; w--) {
 			int h = 1;
-			while (h >= 0 && map[h][w] != '#') {
+			while (h >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				h++;
 			}
@@ -499,14 +499,14 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 18; h >= 1; h--) {
 			int w = 1;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				w++;
 			}
 		}
 		for (int w = 8; w >= 1; w--) {
 			int h = 1;
-			while (h >= 0 && map[h][w] != '#') {
+			while (h >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				h++;
 			}
@@ -516,7 +516,7 @@ void draw_sunlight(char map[][35]) {
 		erase_sunlight(map);
 		for (int h = 18; h >= 6; h--) {
 			int w = 1;
-			while (w >= 0 && map[h][w] != '#') {
+			while (w >= 0 && map[h][w] != '#' && map[h][w] != 'A') {
 				if (map[h][w] == ' ')map[h][w] = '%';
 				w++;
 			}

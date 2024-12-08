@@ -135,6 +135,7 @@
     <ClCompile Include="day_3.cpp" />
     <ClCompile Include="day_4.cpp" />
     <ClCompile Include="day_5.cpp" />
+    <ClCompile Include="day_6.cpp" />
     <ClCompile Include="day_7.cpp" />
     <ClCompile Include="expire_tool.cpp" />
     <ClCompile Include="game_map.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="day_3.h" />
     <ClInclude Include="day_4.h" />
     <ClInclude Include="day_5.h" />
+    <ClInclude Include="day_6.h" />
     <ClInclude Include="day_7.h" />
     <ClInclude Include="expire_tool.h" />
     <ClInclude Include="game_map.h" />

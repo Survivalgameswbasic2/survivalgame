@@ -84,6 +84,9 @@
     <ClCompile Include="backpack.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="day_6.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bad_ending.h">
@@ -150,6 +153,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="backpack.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="day_6.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

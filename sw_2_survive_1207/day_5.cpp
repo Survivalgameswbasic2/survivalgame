@@ -232,21 +232,21 @@ void start_day5(player* user, BackP* user_back) {
 						}
 						break;
 					case(2):
-						if (map[newY][newX + 1] == ' ' || map[newY + 1][newX] == '%') {
+						if (map[newY][newX + 1] == ' ' || map[newY][newX + 1] == '%') {
 							map[newY][newX + 1] = 'A';
 							user->player_x = newX;
 							user->player_y = newY;
 						}
 						break;
 					case(3):
-						if (map[newY - 1][newX] == ' ' || map[newY + 1][newX] == '%') {
+						if (map[newY - 1][newX] == ' ' || map[newY - 1][newX] == '%') {
 							map[newY - 1][newX] = 'A';
 							user->player_x = newX;
 							user->player_y = newY;
 						}
 						break;
 					case(4):
-						if (map[newY][newX - 1] == ' ' || map[newY + 1][newX] == '%') {
+						if (map[newY][newX - 1] == ' ' || map[newY][newX - 1] == '%') {
 							map[newY][newX - 1] = 'A';
 							user->player_x = newX;
 							user->player_y = newY;
@@ -271,7 +271,7 @@ void start_day5(player* user, BackP* user_back) {
 			else if (key == 's' && user->bullet > 0 && user->gun >= 1) { // 's' 키로 총알 발사
 				std::lock_guard<std::mutex> lock(bulletMutex);
 				user->bullet--;
-				bullets.push_back({ user->player_x, user->player_y, playerDirection, 0 });
+				bullets.push_back({ user->player_x, user->player_y, user->direction, 0 });
 			}
 			else if (key == ' ' && is_player_near_item(user, map, user_back)) { // 엔터키로 아이템 획득
 				map[newY][newX] = ' ';

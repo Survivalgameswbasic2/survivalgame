@@ -15,8 +15,26 @@
 #define MAP_WIDTH 34
 #define MAP_HEIGHT 20
 
-std::string dialogue_7[] = {
-    "구조대"
+std::vector<std::vector<std::string>> dialogue_7 = { {
+    "연구원: 다 만들었어요. 무전기. 수신 장",
+"연구원: 이걸로 저희 위치를 알려주면 구해주러 헬기가 올거에요.",
+"플레이어: 네, 피난처에 있는 생존자들오 안전하게 데리고 왔어요. 다같이 탈출하죠 이제",
+"생존자들: 드디어 탈출하는구나! 감사합니다.",
+"연구원: 그럼 이제 구조 요청을 보낼게요!",
+"연구원: ...보냈어요. 저희 위치를 확인하고 이제 오는 것 같아요",
+"플레이어: 잠시만요. 여기에 좀비가 모이는 것 같아요!",
+"연구원: 저희는 아직 뭔가 기척을 못느끼겠는데. 감각이 예민하군요.",
+"연구원: 그 말이 사실이면 큰일 인데요. 아직 헬기가 오려면 조금 걸릴 텐데.",
+"플레이어: 일단 같이 구석에 숨어있으세요. 제가 시간을 끌어 볼게요.",
+"연구원: 그게 무슨! 같이 숨어있죠",
+"플레이어: 아뇨, 숨어있어 봤자 여기 여러사람의 감정에 반응해서 분명 들킬 거에요.",
+"플레이어: 제가 좀비를 처치하면서 유인할테니. 헬기가 오면 먼저 타면서 탈출할 준비를 하세요.",
+"플레이어: 제가 끝까지 남아 좀비를 유인하다가 마지막에 탈게요!",
+"연구원: ...반박하고 싶지만 그게 제일 합리적인거 같네요. 총알은 넉넉하니 무운을 빌게요!",
+"연구원: 당신은 어쩌면 좀비사태의 유일한 돌파구라고 생각하고 꼭 생존하십쇼! 좀비가 돼서도 안돼요!",
+"플레이어: 물론이죠. 걱정마세요. 슬슬 좀비가 오는거 같은데 빨리 숨으세요.",
+"플레이어: ...하 이게 마지막인거 같은 느낌이 드네... 좋아 해보자고!"
+}
 };
 
 std::vector<Zombies*> zombies;
@@ -34,9 +52,10 @@ static struct Bullet {
 static std::vector<Bullet> bullets;
 static std::mutex bulletMutex;
 
+static bool zombie_spawning = true;
 static void spawn_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user, int spawn_x, int spawn_y) {
-    while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(5)); // 3초 대기
+    while (zombie_spawning) {
+        std::this_thread::sleep_for(std::chrono::seconds(6)); // 3초 대기
 
         std::lock_guard<std::mutex> lock(zombieMutex); // 뮤텍스 잠금
         Zombies* newZombie = new Zombies(spawn_x, spawn_y, 1, 0);
@@ -45,8 +64,9 @@ static void spawn_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user, int
     }
 }
 
+static bool zombie_moving = true;
 static void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
-    while (true) {
+    while (zombie_moving){
         std::this_thread::sleep_for(std::chrono::seconds(1)); // 1초 대기
 
         std::lock_guard<std::mutex> lock(zombieMutex); // 뮤텍스 잠금
@@ -65,7 +85,9 @@ static void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
             // 충돌 체크
             if (z->x == user->player_x && z->y == user->player_y) {
                 user->heart--; // 플레이어 체력 감소
-                printstat(user);
+                if (user->heart > 0) {
+                    printstat(user);
+                }
                 updateTextBox("좀비에게 공격당했습니다!");
                 delete z;       // 좀비 제거
                 it = zombies.erase(it);
@@ -78,9 +100,9 @@ static void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
         }
     }
 }
-
+static bool bullet_moving = true;
 static void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
-    while (true) {
+    while (bullet_moving) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // 0.1초 대기
         std::lock_guard<std::mutex> lock(bulletMutex);
 
@@ -113,6 +135,10 @@ static void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
                         hit = true;
                         break;
                     }
+                    else if (map[b.y][b.x] == '#') {
+                        hit = true;
+                        break;
+                    }
                     else {
                         ++zIt;
                     }
@@ -122,8 +148,6 @@ static void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
             // 충돌 또는 경계 초과 처리
             if (hit || b.x < 0 || b.x >= MAP_WIDTH || b.y < 0 || b.y >= MAP_HEIGHT || b.distanceTraveled > 7) {
                 it = bullets.erase(it);
-                bullet_num++;
-                draw_map(map);
                 continue;
             }
 
@@ -138,7 +162,7 @@ static void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
 void start_day7(player* user,BackP*user_back) {
     system("cls");
     char map[MAP_HEIGHT][MAP_WIDTH + 1];
-    copy_map(6, map);
+    copy_map(7, map);
     draw_map(map);         // 탐험 맵
     printstat(user); // 아이템 창 
     updateTextBox("");
@@ -146,6 +170,37 @@ void start_day7(player* user,BackP*user_back) {
     user->player_x = 10;
     user->player_y = 10;
     printplayer();
+    int dialogue_line = 0;
+    bool in_dialogue = true;
+    int flag = 0;
+    int dialogue_num = 0;
+    map[user->player_y][user->player_x] = 'P';
+    while (1) {
+        if (in_dialogue) {
+            // 대화 중일 때
+
+            if (_kbhit()) {
+                int key = _getch();
+                if (key == ' ') { // 스페이스바로 대화 진행
+                    if (dialogue_line < dialogue_7[dialogue_num].size()) {
+                        updateDialogue(dialogue_7[dialogue_num][dialogue_line++]);
+                    }
+                    else {
+                        // 대화 종료
+                        dialogue_clear();
+                        in_dialogue = false;
+                        set_isExplore(true);
+                        dialogue_line = 0;
+                        dialogue_num++;
+                        if (dialogue_num == 1) {
+                            break;
+                        }
+                    }
+                }
+            }
+            continue; // 대화 중에는 아래 로직을 무시하고 다음 루프로 이동
+        }
+    }
     set_hour(9);
     std::thread timerThread(timer2);
     std::thread zombieSpawnThread(spawn_zombies, map, user, 3, 3);
@@ -154,54 +209,41 @@ void start_day7(player* user,BackP*user_back) {
     std::thread zombieSpawnThread3(spawn_zombies, map, user, 31, 4);
     std::thread zombieSpawnThread4(spawn_zombies, map, user, 31, 17);
     std::thread zombieSpawnThread6(spawn_zombies, map, user, 15, 17);
-    int dialogue_line = 0;
-    bool in_dialogue = false;
-    int flag = 0;
-    int dialogue_num = 0;
 
     std::thread zombieMoveThread(move_zombies, map, user);
     std::thread bulletMoveThread(move_bullets, map);
-
-    map[user->player_y][user->player_x] = 'P';
     while (true) {
         map[user->player_y][user->player_x] = ' ';
         draw_sunlight(map);
         if (get_hour() == 21) {
+            stop_timer_running();
+            zombie_moving = false;
+            zombie_spawning = false;
+            bullet_moving = false;
             if (timerThread.joinable()) { timerThread.join(); }
             if (zombieSpawnThread.joinable()) zombieSpawnThread.join();
             if (zombieMoveThread.joinable()) zombieMoveThread.join();
             if (bulletMoveThread.joinable()) bulletMoveThread.join();
+            int line = 0;
+            for (line = 31; line >= 2; line -= 1) {
+                if (line <= 29) {
+                    for (int row = 2; row <= 17; row++) {
+                        if (map[row][line + 2] == '*') {
+                            map[row][line + 2] = ' ';
+                        }
+                    }
+                }
+                for (int row = 2; row <= 17; row++) {
+                    if (map[row][line] != '#' || map[row][line] != 'P') {
+                        map[row][line] = '*';
+                    }
+                }
+                draw_map(map);
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
             break;
         }
-        if (in_dialogue) {
-            // 대화 중일 때
-            if (_kbhit()) {
-                int key = _getch();
-                if (key == ' ') { // 스페이스바로 대화 진행
-                    if (dialogue_line < sizeof(dialogue_7) / sizeof(dialogue_7[0])) {
-                        updateDialogue(dialogue_7[dialogue_line++]);
-                    }
-                    else {
-                        // 대화 종료
-                        dialogue_clear();
-                        in_dialogue = false;
-                        set_isExplore(true);
-                    }
-                }
-                if (dialogue_num == 0) {
-                    map[1][11] = ' ';
-                    map[5][11] = 'N';
-                    dialogue_line = 0;
-                    dialogue_num++;
-                }
-                else if (dialogue_num == 1) {
-                    map[5][11] = ' ';
-                    dialogue_line = 0;
-                    dialogue_num++;
-                }
-            }
-            continue; // 대화 중에는 아래 로직을 무시하고 다음 루프로 이동
-        }
+        
         if (_kbhit()) {
             int key = _getch();
 
@@ -277,15 +319,12 @@ void start_day7(player* user,BackP*user_back) {
             else if (key == ' ' && is_player_near_item(user, map, user_back)) { // 엔터키로 아이템 획득
                 map[user->player_y][user->player_x] = ' ';
             }
-            else if (key == ' ' && is_player_near_npc(user, map)) { // 스페이스바로 NPC와 대화
-                set_isExplore(false);
-                dialogue_clear();
-                updateDialogue(dialogue_7[dialogue_line++]);
-                in_dialogue = true; // 대화 상태 진입
-            }
         }
-        if (user->heart <= 0) {
-
+        if (user->heart <=0) {
+            stop_timer_running();
+            zombie_moving = false;
+            zombie_spawning = false;
+            bullet_moving = false;
             if (timerThread.joinable()) { timerThread.join(); }
             if (zombieSpawnThread.joinable()) zombieSpawnThread.join();
             if (zombieMoveThread.joinable()) zombieMoveThread.join();
@@ -294,5 +333,19 @@ void start_day7(player* user,BackP*user_back) {
         }
         map[user->player_y][user->player_x] = 'P';
         draw_map(map);
+    }
+    stop_timer_running();
+    zombie_moving = false;
+    zombie_spawning = false;
+    bullet_moving = false;
+    if (timerThread.joinable()) { timerThread.join(); }
+    if (zombieSpawnThread.joinable()) zombieSpawnThread.join();
+    if (zombieMoveThread.joinable()) zombieMoveThread.join();
+    if (bulletMoveThread.joinable()) bulletMoveThread.join();
+    if (user->mental < 50 && user->heart>3) {
+        hidden_ending();
+    }
+    else {
+        normal_ending();
     }
 }

@@ -10,7 +10,8 @@
 #include "day_3.h"
 #include "day_4.h"
 #include "day_7.h"
-#include "Day_5.h"
+#include "day_5.h"
+#include "day_6.h"
 #include "backpack.h"
 
 void deleteCursorBlink();
@@ -71,7 +72,7 @@ int main() {
 	//start_day5(user, user_back);
 	system("cls");
 	//draw_ready_after(user, 4, user_back);
-
+	//start_day6(user, user_back);
 	start_day7(user, user_back);
 }
 
