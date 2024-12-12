@@ -8,7 +8,7 @@
 int newX, newY;
 char game_map[20][MAP_HEIGHT][MAP_WIDTH + 1] =
 {
-//0ÀÏÂ÷ µ¿±¼
+//0ì¼ì°¨ ë™êµ´
     {
     "##################################",
     "#              ####              #",
@@ -31,7 +31,7 @@ char game_map[20][MAP_HEIGHT][MAP_WIDTH + 1] =
     "#              ####              #",
     "##################################"
 },
-//1ÀÏÂ÷ ¿Üµı°Ç¹°
+//1ì¼ì°¨ ì™¸ë”´ê±´ë¬¼
    {
         "##################################",
         "#        ##     #           F#x !?",
@@ -53,7 +53,7 @@ char game_map[20][MAP_HEIGHT][MAP_WIDTH + 1] =
         "#           #### N ####     #### #",
         "##################################"
 },
-//2ÀÏÂ÷ Ä·ÇÎÀå
+//2ì¼ì°¨ ìº í•‘ì¥
     {
         "##################################",
         "#      ###     x     ###  x     x#",
@@ -76,10 +76,10 @@ char game_map[20][MAP_HEIGHT][MAP_WIDTH + 1] =
         "##   #     x## #     x#####      #",
         "##################################"
 },
-    //day3 ,(11,1) : »ç±â²Û  -> (32,10);
+    //day3 ,(11,1) : ì‚¬ê¸°ê¾¼  -> (32,10);
      {
         "##################################",
-        "#Z      #  N  #F   #  W          #",
+        "#       #  N  #F   #  W          #",
         "#  ###  # ### #   x# ### # x  ####",
         "# xx##  #     # x  #            F#",
         "#   ##  ### ###    ### ###    ## #",
@@ -100,7 +100,7 @@ char game_map[20][MAP_HEIGHT][MAP_WIDTH + 1] =
         "##################################"
 },
 
-//4ÀÏÂ÷ : °æÂû¼­
+//4ì¼ì°¨ : ê²½ì°°ì„œ
  {
    "################################?#",
    "#     x #  #F   #   #   W# M#  x!#",
@@ -235,48 +235,48 @@ bool is_player_near_item(player* user, char map[][MAP_WIDTH + 1], BackP* user_ba
         newY = user->player_y + dy[i];
         char item_type = map[newY][newX];
         switch (item_type) {
-        case 'F': // ½Ä·®
+        case 'F': // ì‹ëŸ‰
             user_back->food++;
                 user->food++;
                 map[newY][newX] = ' ';
-                updateTextBox("½Ä·®: µüºÁµµ ¸À¾ø¾î º¸ÀÎ´Ù");
+                updateTextBox("ì‹ëŸ‰: ë”±ë´ë„ ë§›ì—†ì–´ ë³´ì¸ë‹¤");
                 printstat(user);
             break;
-        case 'W': // ¹°
+        case 'W': // ë¬¼
             user_back->water++;
                 user->water++;
                 map[newY][newX] = ' ';
-                updateTextBox("¹°: ÀÎ°£ÀÇ »ıÁ¸¿¡´Â ¹İµå½Ã ÇÊ¿äÇÑ ¹°ÀÌ´Ù");
+                updateTextBox("ë¬¼: ì¸ê°„ì˜ ìƒì¡´ì—ëŠ” ë°˜ë“œì‹œ í•„ìš”í•œ ë¬¼ì´ë‹¤");
                 printstat(user);
             break;
-        case 'M': // Ä¡·áÁ¦
+        case 'M': // ì¹˜ë£Œì œ
             user_back->medicine++;
                 user->medicine++;
                 map[newY][newX] = ' ';
-                updateTextBox("Ä¡·áÁ¦: Ã¼·ÂÀ» È¸º¹ÇÏ¿´´Ù");
+                updateTextBox("ì¹˜ë£Œì œ: ì²´ë ¥ì„ íšŒë³µí•˜ì˜€ë‹¤");
                 printstat(user);
             
             printstat(user);
             break;
-        case '!': // ¹«Àü±â
+        case '!': // ë¬´ì „ê¸°
             user->radio++;
             user_back->radio++;
             map[newY][newX] = ' ';
-            updateTextBox("¹«Àü±â¸¦ È¹µæÇß½À´Ï´Ù! Æ¯¼ö ¾ÆÀÌÅÛÀÔ´Ï´Ù!");
+            updateTextBox("ë¬´ì „ê¸°ë¥¼ íšë“í–ˆìŠµë‹ˆë‹¤! íŠ¹ìˆ˜ ì•„ì´í…œì…ë‹ˆë‹¤!");
             printstat(user);
             break;
-        case 'G': // ÃÑ
+        case 'G': // ì´
             user->gun++;
             user_back->gun++;
             map[newY][newX] = ' ';
-            updateTextBox("ÃÑ±â: °­·ÂÇÑ ÇÑ¹ßÀ» ¶§¸®´Â ÃÑ±â´Ù!");
+            updateTextBox("ì´ê¸°: ê°•ë ¥í•œ í•œë°œì„ ë•Œë¦¬ëŠ” ì´ê¸°ë‹¤!");
             printstat(user);
             break;
-        case 'B': // ÃÑ¾Ë
+        case 'B': // ì´ì•Œ
             user_back->bullet = user_back->bullet+3;
             user->bullet= user->bullet+3;
             map[newY][newX] = ' ';
-            updateTextBox("ÅºÃ¢: ÅºÃ¢¾È¿¡ ÃÑ¾ËÀÌ ±×·°Àú·° ÀÖ´Ù. ÃÑ¸¸ ÀÖÀ¸¸é Á»ºñ¸¦ Ã³¸®ÇÒ¼öµµ?");
+            updateTextBox("íƒ„ì°½: íƒ„ì°½ì•ˆì— ì´ì•Œì´ ê·¸ëŸ­ì €ëŸ­ ìˆë‹¤. ì´ë§Œ ìˆìœ¼ë©´ ì¢€ë¹„ë¥¼ ì²˜ë¦¬í• ìˆ˜ë„?");
             printstat(user);
             break;
         }
@@ -299,23 +299,23 @@ void draw_map(char map[][MAP_WIDTH + 1]) {
         for (int x = 0; x < MAP_WIDTH; x++) {
             setCursorPosition(x * 2 + 1, y + 1);
             switch (map[y][x]) {
-            case '#': printf("¡á "); break;
-			case 'b':  printf("\033[38;5;202m¡Ø\033[0m");		break;//Á»ºñ Æø¹ßÇÒ ¶§
-            case 'x': setColor(12); printf("¡á "); setColor(7); break;
-			case 'Z': setColor(13); printf("¡á "); setColor(7); break;
-            case 'F': setColor(14); printf("¡Ú "); setColor(7); break;
-            case 'W': setColor(14); printf("¡Ú "); setColor(7); break;
-            case 'M': setColor(14); printf("¡Ú "); setColor(7); break;
-            case '!': setColor(11); printf("¡Ú "); setColor(7); break; // ¹«Àü±â (ÇÏ´Ã»ö)
-            case 'N': setColor(9);  printf("¡Ü "); setColor(7); break;
+            case '#': printf("â–  "); break;
+			case 'b':  printf("\033[38;5;202mâ€»\033[0m");		break;//ì¢€ë¹„ í­ë°œí•  ë•Œ
+            case 'x': setColor(12); printf("â–  "); setColor(7); break;
+			case 'Z': setColor(13); printf("â–  "); setColor(7); break;
+            case 'F': setColor(14); printf("â˜… "); setColor(7); break;
+            case 'W': setColor(14); printf("â˜… "); setColor(7); break;
+            case 'M': setColor(14); printf("â˜… "); setColor(7); break;
+            case '!': setColor(11); printf("â˜… "); setColor(7); break; // ë¬´ì „ê¸° (í•˜ëŠ˜ìƒ‰)
+            case 'N': setColor(9);  printf("â— "); setColor(7); break;
             /*case '%': colorSetBack(6, 6); std::cout << "  "; setColor(7); break;*/
             case '%': setColor(6); std::cout << "* "; setColor(7); break;
-            case '?': setColor(11); printf("¡á "); setColor(7); break;
-            case 'P': setColor(2); std::cout << "¡á "; setColor(7); break;
-            case '*': std::cout << "¢´ "; break;
-            case 'G': setColor(15); std::cout << "¡ş "; setColor(7); break;
-            case 'B': setColor(15); std::cout << "¤ı "; setColor(7); break;
-            case 'A': std::cout << "¡à ";
+            case '?': setColor(11); printf("â–  "); setColor(7); break;
+            case 'P': setColor(2); std::cout << "â–  "; setColor(7); break;
+            case '*': std::cout << "Â¤ "; break;
+            case 'G': setColor(15); std::cout << "ï¿¢ "; setColor(7); break;
+            case 'B': setColor(15); std::cout << "ã† "; setColor(7); break;
+            case 'A': std::cout << "â–¡ ";
             default: printf("  "); break;
             }
         }
@@ -358,7 +358,7 @@ void meet_zombie_change_edge() {
 	for (int y = 0; y < MAP_HEIGHT; y++) {
 		for (int x = 0; x < MAP_WIDTH; x++) {
 			setCursorPosition(x * 2 + 1, y + 1);
-			if (edge[y][x] == '#') { setColor(12); printf("¡á "); setColor(7); }
+			if (edge[y][x] == '#') { setColor(12); printf("â–  "); setColor(7); }
 		}
 	}
 }
@@ -395,7 +395,7 @@ void is_player_near_explosive_zombie(player* user, char map[][MAP_WIDTH + 1]) {
 					handle_explosion(ezx, ezy, user, map);
 					user->heart -= 2;
 					printstat(user);
-					updateTextBox("ÀÚÆø Á»ºñ°¡ Æø¹ßÇß´Ù! Ã¼·ÂÀÌ 2 °¨¼ÒÇß´Ù!!");
+					updateTextBox("ìí­ ì¢€ë¹„ê°€ í­ë°œí–ˆë‹¤! ì²´ë ¥ì´ 2 ê°ì†Œí–ˆë‹¤!!");
                     meet_zombie_change_edge();
 					return;
 				}
