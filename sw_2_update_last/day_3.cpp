@@ -333,6 +333,7 @@ void start_day3(player* user, BackP* user_back) {
 				printstat(user);
 				updateTextBox("...불안해, 무서워... 아무리봐도 좀비는 적응이 안가네");
 			}
+			is_player_near_explosive_zombie(user, map);
 		}
 		if (user->heart <= 0) {
 			stop_timer_running();

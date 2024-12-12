@@ -79,7 +79,7 @@ char game_map[20][MAP_HEIGHT][MAP_WIDTH + 1] =
     //day3 ,(11,1) : 사기꾼  -> (32,10);
      {
         "##################################",
-        "#       #  N  #F   #  W          #",
+        "#Z      #  N  #F   #  W          #",
         "#  ###  # ### #   x# ### # x  ####",
         "# xx##  #     # x  #            F#",
         "#   ##  ### ###    ### ###    ## #",
@@ -365,47 +365,38 @@ void meet_zombie_change_edge() {
 
 void handle_explosion(int ezx, int ezy, player* user, char map[][MAP_WIDTH + 1]) {
     {
-        std::lock_guard<std::mutex> lock(bufferMutex);
-        for (int blink = 0; blink < 3; ++blink) {
+       // std::lock_guard<std::mutex> lock(bufferMutex);
+        for (int blink = 0; blink < 4; ++blink) {
             for (int dy = -1; dy <= 1; ++dy) {
                 for (int dx = -1; dx <= 1; ++dx) {
                     int nx = ezx + dx;
                     int ny = ezy + dy;
-                    if (nx >= 0 && nx < MAP_WIDTH && ny >= 0 && ny < MAP_HEIGHT) {
+                    if (nx > 0 && nx < MAP_WIDTH && ny > 0 && ny < MAP_HEIGHT) {
                         if (!(nx == user->player_x && ny == user->player_y)) {
                             map[ny][nx] = (blink % 2 == 0) ? 'b' : ' ';
                         }
                     }
                 }
             }
-
+            draw_map(map);
         }
+        meet_zombie_change_edge();
     }
-        draw_map(map);
-        for (int dy = -1; dy <= 1; ++dy) {
-            for (int dx = -1; dx <= 1; ++dx) {
-                int nx = ezx + dx;
-                int ny = ezy + dy;
-                if (nx >= 0 && nx < MAP_WIDTH && ny >= 0 && ny < MAP_HEIGHT) {
-                    if (!(nx == user->player_x && ny == user->player_y)) {
-                        map[ny][nx] = ' ';
-                    }
-                }
-            }
-        }
 }
 void is_player_near_explosive_zombie(player* user, char map[][MAP_WIDTH + 1]) {
+   
 	for (int dy = -1; dy <= 1; ++dy) {
 		for (int dx = -1; dx <= 1; ++dx) {
 			int ezx = user->player_x + dx;
 			int ezy = user->player_y + dy;
 
-			if (ezx >= 0 && ezx < MAP_WIDTH && ezy >= 0 && ezy < MAP_HEIGHT) {
+			if (ezx > 0 && ezx < MAP_WIDTH && ezy > 0 && ezy < MAP_HEIGHT) {
 				if (map[ezy][ezx] == 'Z') {
 					handle_explosion(ezx, ezy, user, map);
 					user->heart -= 2;
 					printstat(user);
 					updateTextBox("자폭 좀비가 폭발했다! 체력이 2 감소했다!!");
+                    meet_zombie_change_edge();
 					return;
 				}
 			}
@@ -415,13 +406,9 @@ void is_player_near_explosive_zombie(player* user, char map[][MAP_WIDTH + 1]) {
 
 
 void handle_zombie_death_effect(int zx, int zy, char map[][MAP_WIDTH + 1]) {
-    {
-        std::lock_guard<std::mutex> lock(bufferMutex);
-        for (int blink = 0; blink < 1; ++blink) {
-            map[zy][zx] = (blink % 2 == 0) ? 'b' : ' ';
-        }
+    std::lock_guard<std::mutex> lock(bufferMutex);
+    for (int blink = 0; blink < 2; blink++) {
+        map[zy][zx] = (blink % 2 == 0) ? 'b' : ' ';
+        draw_map(map);
     }
-    draw_map(map);
-	map[zy][zx] = ' ';
-	draw_map(map);
 }

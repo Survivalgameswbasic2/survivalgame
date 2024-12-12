@@ -29,7 +29,7 @@ int main() {
 	player* user = new player();
 	BackP* user_back = new BackP();
 	system("cls");
-	print_intro(0);
+	/*print_intro(0);
 	system("cls");
 	start_day0(user, user_back);
 	system("cls");
@@ -46,7 +46,7 @@ int main() {
 	draw_ready_after(user, 2, user_back);
 	system("cls");
 	print_intro(3);
-	system("cls");
+	system("cls");*/
 	start_day3(user,user_back);
 	system("cls");
 	draw_ready_after(user, 3, user_back);
