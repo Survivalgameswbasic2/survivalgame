@@ -131,8 +131,8 @@ void draw_ready_text_after(player* p) {
 	}
 
 
-	if (p->mental > 100) {
-		bad_ending_starve();
+	if (p->mental <= 0) {
+		bad_ending_zombie();
 	}
 
 

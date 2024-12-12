@@ -175,6 +175,7 @@ void start_day3(player* user, BackP* user_back) {
 							map[10][32] = ' ';
 							if (user->food > 1) user->food = 1;
 							if (user->water > 1) user->water = 1;
+							printstat(user);
 						}
 						else if(dialogue_num==4){
 							dialogue_num = 3;
@@ -344,7 +345,7 @@ void start_day3(player* user, BackP* user_back) {
 			terminateZombieThread3 = true;
 			if (zombieThread3.joinable()) { zombieThread3.join(); }
 			if (timerThread.joinable()) { timerThread.join(); }
-			bad_ending_starve();
+			bad_ending_zombie();
 		}
 		map[user->player_y][user->player_x] = 'P';
 		draw_map(map);

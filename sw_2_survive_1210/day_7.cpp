@@ -81,10 +81,10 @@ static void move_zombies(char map[MAP_HEIGHT][MAP_WIDTH + 1], player* user) {
             map[z->y][z->x] = ' ';
 
             // 플레이어를 향한 이동 계산
-            if (z->x < user->player_x && map[z->y][z->x + 1] ==' ') z->x++;
-            else if (z->x > user->player_x && map[z->y][z->x -1] == ' ') z->x--;
-            if (z->y < user->player_y && map[z->y+1][z->x] == ' ') z->y++;
-            else if (z->y > user->player_y && map[z->y-1][z->x] == ' ') z->y--;
+            if (z->x < user->player_x && map[z->y][z->x+1]!='x') z->x++;
+            else if (z->x > user->player_x && map[z->y][z->x - 1] != 'x') z->x--;
+            if (z->y < user->player_y && map[z->y+1][z->x] != 'x') z->y++;
+            else if (z->y > user->player_y && map[z->y-1][z->x] != 'x') z->y--;
 
             // 충돌 체크
             if (z->x == user->player_x && z->y == user->player_y) {
@@ -142,7 +142,6 @@ static void move_bullets(char map[MAP_HEIGHT][MAP_WIDTH + 1]) {
                         map[z->y][z->x] = ' ';
                         delete z;
                         zIt = zombies.erase(zIt);
-                        hit = true;
                         break;
                     }
                     else {
@@ -334,8 +333,9 @@ void start_day7(player* user,BackP*user_back) {
                 }
             }
             else if (key == 's' && user->bullet>0&&user->gun>=1) { // 's' 키로 총알 발사
-                std::lock_guard<std::mutex> lock(bulletMutex);
                 PlaySound(TEXT("gun.wav"), NULL, SND_ASYNC);
+                std::lock_guard<std::mutex> lock(bulletMutex);
+          
                 user->bullet--;
                 bullets.push_back({ user->player_x, user->player_y, playerDirection, 0 });
             }

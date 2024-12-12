@@ -86,6 +86,8 @@ std::vector<std::vector<std::string>> dialogue_6 = {
 "연구원: 여기서 도망치기 전에 여러 물자들을 가져가죠. 혹시몰라 주변에 있는 탄창들을 챙기기 잘했군요. 당신도 총을 가지고 있는걸 보니 여기 다 챙겨가세요.",
 "플레이어: ...탄창이 많긴하군요. 돌아다니는데 총알이 많이 없었던 이유가 여기에 있었다니..",
 "플레이어: 일단 총알 감사합니다. 이제 나가죠.",
+"연구원 : 방어구도 챙겨가시죠. 방어구가 있다면 좀비로부터 스트레스도 덜 받을 겁니다"
+"플레이어: 감사합니다. 이제 탈출해보죠"
 }
 };
 static std::vector<Zombie> zombies = {
@@ -430,7 +432,7 @@ void start_day6(player* user, BackP* user_back) {
 			if (zombieThread6.joinable()) { zombieThread6.join(); }
 			if (timerThread.joinable()) { timerThread.join(); }
 			if (bulletMoveThread.joinable()) bulletMoveThread.join();
-			bad_ending_starve();
+			bad_ending_zombie();
 		}
 		map[user->player_y][user->player_x] = 'P';
 		draw_map(map);

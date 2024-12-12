@@ -269,7 +269,7 @@ void start_day2(player* user, BackP* user_back) {
 			terminateZombieThread2 = true;
 			if (zombieThread2.joinable()) { zombieThread2.join(); }
 			if (timerThread.joinable()) { timerThread.join(); }
-			bad_ending_starve();
+			bad_ending_zombie();
 		}
 		map[user->player_y][user->player_x] = 'P';
 		draw_map(map);

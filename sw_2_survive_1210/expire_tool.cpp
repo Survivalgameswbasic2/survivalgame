@@ -125,6 +125,7 @@ void printstat(player* user) {
 	if (user->mode == 1) {
 		user->maxh = 6;
 		user->maxm = 100;
+		user->heart++;
 	}
 	else if (user->mode == 2) {
 		user->maxh = 5;
@@ -188,36 +189,18 @@ void printstat(player* user) {
 	pos1.X = pos1.X - 26;
 	pos1 = { x ,y++ };
 	SetConsoleCursorPosition(hConsoleOut, pos1);
-	if (user->bullet != 0) {
 		std::cout << "弛 驕�� X "<< user->bullet;
 		pos1.X = pos1.X + 26;
 		SetConsoleCursorPosition(hConsoleOut, pos1);
 		std::cout << "弛";
 		pos1.X = pos1.X - 26;
-	}
-	else {
-		std::cout << "弛 --- ";
-		pos1.X = pos1.X + 26;
-		SetConsoleCursorPosition(hConsoleOut, pos1);
-		std::cout << "弛";
-		pos1.X = pos1.X - 26;
-	}
 	pos1 = { x ,y++ };
 	SetConsoleCursorPosition(hConsoleOut, pos1);
-	if (user->medicine != 0) {
 		std::cout << "弛 纂猿薯 X "<<user->medicine;
 		pos1.X = pos1.X + 26;
 		SetConsoleCursorPosition(hConsoleOut, pos1);
 		std::cout << "弛";
 		pos1.X = pos1.X - 26;
-	}
-	else {
-		std::cout << "弛 --- ";
-		pos1.X = pos1.X + 26;
-		SetConsoleCursorPosition(hConsoleOut, pos1);
-		std::cout << "弛";
-		pos1.X = pos1.X - 26;
-	}
 	pos1 = { x ,y++ };
 	SetConsoleCursorPosition(hConsoleOut, pos1);
 	std::cout << "戌式式式式式式式式式式式式式式式式式式式式式式式式式戎";

@@ -85,9 +85,30 @@ void print_intro(int day) {
 		setCursorPosition(1, 4);
 		printf("거점으로 삼을 정도의 장소이니 혹시 또 다른 사람들이 더 있을지도 모른다. 조심하자.");
 		setCursorPosition(1, 6);
-		printf("목표: 학교에서 사기꾼의 거점을 찾아내자.");
+		printf("목표: 학교에서 사기꾼의 거점을 찾아 잡자.");
 	}
-
+	else if (day == 6) {
+		setCursorPosition(1, 1);
+		printf("당신은 그동안 모은 장비들을 정비할 필요가 있다고 느꼈다.");
+		setCursorPosition(1, 2);
+		printf("당신은 처음 정신을 차렸던 동굴로 향했다.");
+		setCursorPosition(1, 3);
+		printf("하지만 그곳에서 뜻밖에 인물을 만나게 되는데...");
+		setCursorPosition(1, 5);
+		printf("목표: 사람들과의 대화를 통해 현재 상황을 파악해보자.");
+	}
+	else if (day == 7) {
+		setCursorPosition(1, 1);
+		printf("드디어 탈출의 때가 왔다!");
+		setCursorPosition(1, 2);
+		printf("그동안 모은 신호기를 통해 헬기를 부르는데 성공했다");
+		setCursorPosition(1, 3);
+		printf("헬기가 도착하기까지 버티는 것이 문제!");
+		setCursorPosition(1, 4);
+		printf("최선을 다해 살아남아 보자!");
+		setCursorPosition(1, 6);
+		printf("목표: 제한시간 동안 살아남기");
+	}
 
 	int tmp = _getch();
 	while (tmp != ' ') {

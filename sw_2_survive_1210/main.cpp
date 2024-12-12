@@ -32,40 +32,45 @@ int main() {
 	print_intro(0);
 	system("cls");
 	
-	start_day0(user, user_back);
-
-
+	/*start_day0(user, user_back);
 	system("cls");
 	print_intro(1);
 	system("cls");
 	start_day1(user, user_back);
-
 	system("cls");
 	draw_ready_after(user, 1, user_back);
 	system("cls");
-
+	print_intro(2);
 	system("cls");
 	start_day2(user, user_back);
-
 	system("cls");
 	draw_ready_after(user, 2, user_back);
 	system("cls");
+	print_intro(3);
+	system("cls");
 	start_day3(user,user_back);
-
 	system("cls");
 	draw_ready_after(user, 3, user_back);
 	system("cls");
-
-
+	print_intro(4);
+	system("cls");
 	start_day4(user, user_back);
+	system("cls");
 	draw_ready_after(user, 4, user_back);
+	system("cls");
+	print_intro(5);
+	system("cls");
 	start_day5(user, user_back);
 	system("cls");
 	draw_ready_after(user, 5, user_back);
 	system("cls");
+	print_intro(6);
+	system("cls");
 	start_day6(user, user_back);
 	system("cls");
 	draw_ready_after(user, 6, user_back);
+	system("cls");*/
+	print_intro(7);
 	system("cls");
 	start_day7(user, user_back);
 }

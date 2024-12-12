@@ -13,7 +13,7 @@ player::player() {
 	mental = 100;
 	food = 5;
 	water = 5;
-	bullet = 10;//테스트용
+	bullet = 3;//테스트용
 	player_x = 1;
 	player_y = 0;
 	direction = 0;
