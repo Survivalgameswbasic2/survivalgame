@@ -31,7 +31,7 @@ void game_start_screen() {
 
 	setCursorPosition(50, 23);
 	// 추가 정보를 위한 여백 출력
-	std::string subtitle = "Press any key to start...";
+	std::string subtitle = "Press enter key to start...";
 	std::cout << subtitle;
 	//printCenteredText(subtitle, consoleWidth);
 

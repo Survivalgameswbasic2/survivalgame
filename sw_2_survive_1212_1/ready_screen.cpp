@@ -26,9 +26,7 @@ void print_intro(int day) {
 		printf("이동키: 상 하 좌 우 키");
 		setCursorPosition(1, 8);
 		printf("상호작용키: 스페이스키");
-		getchar();
-		getchar();
-		getchar();
+		
 	}
 	else if (day == 1) {
 		setCursorPosition(1, 1);
